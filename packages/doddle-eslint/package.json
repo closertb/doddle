@@ -1,0 +1,33 @@
+{
+  "name": "@doddle/doddle-eslint",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "files": [
+    "jq",
+    "rules",
+    "index.js",
+    "README.md"
+  ],
+  "bin": {
+    "create-doddle": "./index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@git.56qq.com:frontend/engine/eslint-config-hcb.git"
+  },
+  "keywords": [],
+  "author": "DenzelT",
+  "license": "ISC",
+  "dependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.17.1",
+    "eslint-plugin-jsx-a11y": "^6.2.1",
+    "eslint-plugin-react": "^7.12.4",
+    "eslint-plugin-react-hooks": "^1.6.0"
+  }
+}

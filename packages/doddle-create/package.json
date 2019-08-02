@@ -1,0 +1,33 @@
+{
+  "name": "@doddle/doddle-create",
+  "version": "0.0.1",
+  "description": "",
+  "main": "./src/common.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "doddle-create": "./index.js"
+  },
+  "keywords": [],
+  "author": "DenzelT",
+  "license": "ISC",
+  "files": [
+    "src",
+    "index.js",
+    "README"
+  ],
+  "dependencies": {
+    "chalk": "^1.1.3",
+    "cross-spawn": "^5.1.0",
+    "fs-extra": "^7.0.0",
+    "commander": "2.18.0"
+  },
+  "devDependencies": {
+		"@babel/cli": "^7.2.0",
+    "@babel/core": "^7.2.0",
+    "@babel/preset-env": "^7.2.0",
+		"@babel/plugin-proposal-object-rest-spread": "^7.2.0",
+		"@babel/plugin-transform-runtime": "^7.2.0"
+  }
+}

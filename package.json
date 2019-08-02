@@ -1,0 +1,32 @@
+{
+  "name": "doddle",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "install": "lerna bootstrap",
+    "lint": "lint-staged"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.0.1",
+    "husky": "^2.2.0",
+    "lerna": "^3.13.0",
+    "lint-staged": "^8.0.4",
+    "prettier": "1.16.4"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,md,css,html}": [
+      "prettier --trailing-comma es5 --single-quote --write",
+      "git add"
+    ],
+    "yarn.lock": [
+      "git rm --cached"
+    ]
+  }
+}
