@@ -1,11 +1,11 @@
 {
 	"name": "@doddle/doddle-bisheng-theme",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"main": "./lib/index.js",
 	"scripts": {
-    "postpublish": "shx rm -rf lib",
-    "prepublish": "babel ./src --out-dir ./lib && shx cp -R src/static/* lib/static"
-  },
+		"postpublish": "shx rm -rf lib",
+		"prepublish": "babel ./src --out-dir ./lib && shx cp -R src/static/* lib/static"
+	},
 	"files": [
 		"lib",
 		"README.md"
