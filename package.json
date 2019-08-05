@@ -1,6 +1,6 @@
 {
   "name": "doddle",
-  "private": true,
+  "version": "0.0.1",
   "workspaces": [
     "packages/*"
   ],
