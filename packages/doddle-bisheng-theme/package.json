@@ -1,0 +1,32 @@
+{
+	"name": "@doddle/doddle-bisheng-theme",
+	"version": "0.0.1",
+	"main": "./lib/index.js",
+	"scripts": {
+    "postpublish": "shx rm -rf lib",
+    "prepublish": "babel ./src --out-dir ./lib && shx cp -R src/static/* lib/static"
+  },
+	"files": [
+		"lib",
+		"README.md"
+	],
+	"dependencies": {
+		"bisheng": "^1.1.2",
+		"bisheng-plugin-antd": "^1.0.0",
+		"bisheng-plugin-description": "^0.1.4",
+		"bisheng-plugin-react": "^1.0.0",
+		"bisheng-plugin-toc": "^0.4.4"
+	},
+	"devDependencies": {
+		"@babel/cli": "^7.2.0",
+		"@babel/core": "^7.2.0",
+		"@babel/plugin-proposal-class-properties": "^7.2.0",
+		"@babel/plugin-proposal-decorators": "^7.2.0",
+		"@babel/plugin-proposal-object-rest-spread": "^7.2.0",
+		"@babel/plugin-transform-classes": "^7.2.0",
+		"@babel/preset-env": "^7.2.0",
+		"@babel/preset-react": "^7.0.0",
+		"@babel/runtime": "^7.4.5",
+		"shx": "^0.3.2"
+	}
+}

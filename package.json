@@ -6,6 +6,7 @@
   ],
   "scripts": {
     "install": "lerna bootstrap",
+    "publish": "lerna publish",
     "lint": "lint-staged"
   },
   "devDependencies": {
