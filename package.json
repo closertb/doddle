@@ -1,6 +1,5 @@
 {
   "name": "doddle",
-  "version": "0.0.1",
   "workspaces": [
     "packages/*"
   ],
