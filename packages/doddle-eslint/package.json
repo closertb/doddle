@@ -1,6 +1,6 @@
 {
   "name": "@doddle/doddle-eslint",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -22,7 +22,7 @@
   "keywords": [],
   "author": "DenzelT",
   "license": "ISC",
-  "peerDependencies": {
+  "dependencies": {
     "eslint": "^5.16.0",
     "babel-eslint": "^10.0.1",
     "eslint-config-airbnb": "^17.1.0",
