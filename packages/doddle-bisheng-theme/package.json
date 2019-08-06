@@ -1,6 +1,6 @@
 {
 	"name": "@doddle/doddle-bisheng-theme",
-	"version": "0.0.8-alpha.0",
+	"version": "0.0.8",
 	"main": "./lib/index.js",
 	"scripts": {
 		"postpublish": "shx rm -rf lib",
