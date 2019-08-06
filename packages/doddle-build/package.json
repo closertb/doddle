@@ -1,6 +1,6 @@
 {
   "name": "@doddle/doddle-build",
-  "version": "0.0.5",
+  "version": "0.0.2",
   "description": "a webpack compiler like react-scripts",
   "main": "./src/common.js",
   "scripts": {
