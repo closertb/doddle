@@ -28,5 +28,6 @@
 		"@babel/preset-react": "^7.0.0",
 		"@babel/runtime": "^7.4.5",
 		"shx": "^0.3.2"
-	}
+	},
+	"gitHead": "c2d26a84e587d5906b8280f9fa74354bf2361783"
 }
