@@ -2,12 +2,11 @@
   "name": "@doddle/doddle-build",
   "version": "0.0.8",
   "description": "a webpack compiler like react-scripts",
-  "main": "./src/common.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "doddle-build": "./bind/doddle-build.js"
+    "doddle-build": "./bin/doddle-build.js"
   },
   "keywords": [
     "react-scripts",

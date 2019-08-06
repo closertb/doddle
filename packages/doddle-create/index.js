@@ -6,7 +6,7 @@
 
 const commander = require('commander');
 const chalk = require('chalk');
-const packageJson = require('./package.json.js');
+const packageJson = require('./package.json');
 const excute = require('./src/index');
 
 // 四种模板。对应我git仓库四个仓库地址
