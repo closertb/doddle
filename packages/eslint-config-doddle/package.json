@@ -1,5 +1,5 @@
 {
-  "name": "@doddle/doddle-eslint",
+  "name": "@doddle/eslint-config-doddle",
   "version": "0.0.11",
   "description": "",
   "main": "index.js",
@@ -14,10 +14,6 @@
   ],
   "bin": {
     "create-doddle": "./index.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git@git.56qq.com:frontend/engine/eslint-config-hcb.git"
   },
   "keywords": [],
   "author": "DenzelT",

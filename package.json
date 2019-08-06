@@ -15,6 +15,10 @@
     "lint-staged": "^8.0.4",
     "prettier": "1.16.4"
   },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:closertb/doddle.git"
+  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
