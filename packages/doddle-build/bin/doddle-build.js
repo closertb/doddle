@@ -9,6 +9,7 @@
 'use strict';
 
 const ArgStart = 2;
+
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
 // terminate the Node.js process with a non-zero exit code.
@@ -19,10 +20,14 @@ process.on('unhandledRejection', err => {
 const spawn = require('cross-spawn');
 const args = process.argv.slice(ArgStart);
 
+// console.log('args', args);
 // 寻找有效参数
 const scriptIndex = args.findIndex(
   x => x === 'dev' || x === 'qa' || x === 'pub' || x === 'start'
 );
+
+/* // 寻找有效参数
+const protIndex = args.findIndex(x => ~x.indexOf('port')); */
 
 const script = scriptIndex === -1 ? args[0] : args[scriptIndex];
 const nodeArgs = scriptIndex > 0 ? args.slice(0, scriptIndex) : [];

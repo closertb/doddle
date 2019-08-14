@@ -32,6 +32,7 @@ const WebpackDevServer = require('webpack-dev-server');
 const configFactory = require('../config/webpack.config');
 const { createCompiler } = require('./base');
 // const createDevServerConfig = require('../config/webpackDevServer.config');
+const ArgStart = 2;
 
 // const useYarn = fs.existsSync(paths.yarnLockFile);
 
@@ -40,11 +41,16 @@ const { createCompiler } = require('./base');
 /* if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
   process.exit(1);
 } */
+const args = process.argv.slice(ArgStart).reduce((pre, cur, index, arr) => {
+  if (~cur.indexOf('--')) {
+    pre[cur.replace(/-/g, '')] = arr[index + 1];
+  }
+  return pre;
+}, {});
 
 // Tools like Cloud9 rely on this.
-const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 3000;
-const HOST = '0.0.0.0';
-const port = DEFAULT_PORT;
+const HOST = args.host || 'localhost';
+const port = parseInt(args.port, 10) || 3000;
 // We require that you explicitly set browsers and do not fall back to
 // browserslist defaults.
 // const { checkBrowsers } = require('react-dev-utils/browsersHelper');
