@@ -40,7 +40,17 @@ module.exports = function(webpackEnv = 'development') {
     module: {
       rules: [
         {
-          test: /\.js?$/,
+          test: /\.jsx?$/,
+          loader: 'eslint-loader',
+          enforce: 'pre',
+          include: paths.appSrc, // 指定检查的目录
+          options: {
+            // 这里的配置项参数将会被传递到 eslint 的 CLIEngine
+            formatter: require('eslint-friendly-formatter'), // 指定错误报告的格式规范
+          },
+        },
+        {
+          test: /\.jsx?$/,
           exclude: /(node_modules|bower_components)/,
           loader: 'babel-loader',
           query: {
@@ -75,10 +85,14 @@ module.exports = function(webpackEnv = 'development') {
       new webpack.DefinePlugin({
         'process.env': { NODE_ENV: "'" + NODE_ENV + "'" },
       }),
+      // Moment.js is an extremely popular library that bundles large locale files
+      // by default due to how Webpack interprets its code. This is a practical
+      // solution that requires the user to opt into importing specific locales.
+      // https://github.com/jmblog/how-to-optimize-momentjs-with-webpack
+      // I just leave zh-ch to my package
+      // You can remove this if you don't use Moment.js:
+      new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /zh-cn/),
     ],
-    performance: {
-      hints: isServer ? false : 'warning',
-    },
   };
   if (isServer) {
     config.module.rules.push(

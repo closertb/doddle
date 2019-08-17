@@ -29,10 +29,12 @@ verifyTypeScriptSetup(); */
 const chalk = require('chalk');
 const WebpackDevServer = require('webpack-dev-server');
 // const paths = require('../config/paths');
+const clearConsole = require('../config/clearConsole');
 const configFactory = require('../config/webpack.config');
 const { createCompiler } = require('./base');
 // const createDevServerConfig = require('../config/webpackDevServer.config');
 const ArgStart = 2;
+const isInteractive = process.stdout.isTTY;
 
 // const useYarn = fs.existsSync(paths.yarnLockFile);
 
@@ -81,6 +83,8 @@ const serverConfig = {
   hot: true,
   inline: true,
   open: true,
+  quiet: true, // don't console the compile message
+  overlay: true,
   stats: {
     colors: true,
   },
@@ -92,7 +96,7 @@ const serverConfig = {
 // the problem mentioned at https://stackoverflow.com/questions/52818569/webpack-dev-server-hot-reload-doesnt-work-via-node-api
 // the document mentiod at https://webpack.js.org/guides/hot-module-replacement/
 WebpackDevServer.addDevServerEntrypoints(config, serverConfig);
-const compiler = createCompiler(config);
+const compiler = createCompiler(config, serverConfig);
 
 const devServer = new WebpackDevServer(compiler, serverConfig);
 // Launch WebpackDevServer.
@@ -100,7 +104,10 @@ devServer.listen(port, HOST, err => {
   if (err) {
     return console.log(err);
   }
-
+  if (isInteractive) {
+    // console.log('clear...');
+    clearConsole();
+  }
   // We used to support resolving modules according to `NODE_PATH`.
   // This now has been deprecated in favor of jsconfig/tsconfig.json
   // This lets you use absolute paths in imports inside large monorepos:
