@@ -27,7 +27,7 @@ const program = new commander.Command(packageJson.name)
   .arguments('<templateName>')
   .arguments('<projectName>')
   .alias('cp')
-  .description('create-doddle react myProject')
+  .description('doddle-create react myProject')
   .action(function(index, name) {
     inputIndex = index;
     // 允许目标项目名和要复制的模板类型名顺序颠倒
