@@ -1,6 +1,6 @@
 {
-  "name": "@doddle/doddle-create",
-  "version": "0.0.9",
+  "name": "doddle-create",
+  "version": "0.0.10",
   "description": "",
   "main": "./src/common.js",
   "scripts": {
