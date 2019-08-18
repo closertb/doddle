@@ -22,3 +22,9 @@ scripts: {
 ```
 
 不同的编译指令将有一个全局变量 process.env.NODE_ENV 进行区分，其值分别对应 local,dev,qa,prod
+
+## 待开发功能
+
+1. 运行端口检测？
+2. proxy 支持
+3. 打包参数支持

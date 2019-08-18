@@ -10,21 +10,6 @@ process.on('unhandledRejection', err => {
   throw err;
 });
 
-// Ensure environment variables are read.
-// require('../config/env');
-
-// @remove-on-eject-begin
-// Do the preflight check (only happens before eject).
-
-/* const verifyPackageTree = require('./utils/verifyPackageTree');
-if (process.env.SKIP_PREFLIGHT_CHECK !== 'true') {
-  verifyPackageTree();
-}
-const verifyTypeScriptSetup = require('./utils/verifyTypeScriptSetup');
-verifyTypeScriptSetup(); */
-
-// @remove-on-eject-end
-
 // const fs = require('fs');
 const chalk = require('chalk');
 const WebpackDevServer = require('webpack-dev-server');
@@ -111,7 +96,6 @@ devServer.listen(port, HOST, err => {
   // We used to support resolving modules according to `NODE_PATH`.
   // This now has been deprecated in favor of jsconfig/tsconfig.json
   // This lets you use absolute paths in imports inside large monorepos:
-
   console.log(chalk.cyan('Starting the development server...\n'));
   // openBrowser(urls.localUrlForBrowser);
 });
