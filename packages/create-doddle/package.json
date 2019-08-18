@@ -1,13 +1,13 @@
 {
-  "name": "doddle-create",
-  "version": "0.0.10",
+  "name": "create-doddle",
+  "version": "1.2.1",
   "description": "",
   "main": "./src/common.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "doddle-create": "./index.js"
+    "create-doddle": "./index.js"
   },
   "keywords": [],
   "author": "DenzelT",
