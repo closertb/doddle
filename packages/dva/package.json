@@ -1,6 +1,6 @@
 {
 	"name": "@doddle/dva",
-	"version": "0.0.01",
+	"version": "0.0.2",
 	"scripts": {
 		"postpublish": "shx rm -rf lib",
 		"prepublish": "babel ./src --out-dir ./lib"

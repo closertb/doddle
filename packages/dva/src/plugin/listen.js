@@ -1,6 +1,6 @@
 import * as qs from 'qs';
 import pathToRegexp from 'path-to-regexp';
-import { Type, reduceToObject } from '../util';
+import { Type, reduceToObject } from '../utils';
 
 const getQuery = search => qs.parse(search.slice(1));
 

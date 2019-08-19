@@ -1,5 +1,5 @@
 import plugin from './plugin';
-import { reduceToObject as reduce } from './util';
+import { reduceToObject as reduce } from './utils';
 
 const defaultPlugins = [
   plugin.put,

@@ -1,4 +1,4 @@
-import { prefixType } from '../util';
+import { prefixType } from '../utils';
 
 const UPDATE_STATE_ACTION = 'updateState';
 

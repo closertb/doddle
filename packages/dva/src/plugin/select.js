@@ -16,7 +16,7 @@ function createEffects(sagaEffects, model) {
 
 export default {
   onEffect(effect, sagaEffects, model) {
-    return function* effectEnhancer(actionAction, effects) {
+    return function* effectEnhancer(action, effects) {
       const result = yield effect(
         action,
         createEffects(effects || sagaEffects, model)

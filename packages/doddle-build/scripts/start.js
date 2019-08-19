@@ -102,7 +102,6 @@ devServer.listen(port, HOST, err => {
   // This now has been deprecated in favor of jsconfig/tsconfig.json
   // This lets you use absolute paths in imports inside large monorepos:
   console.log(chalk.cyan('Starting the development server...\n'));
-  console.log('config', serverConfig);
   // openBrowser(urls.localUrlForBrowser);
 });
 

@@ -1,4 +1,4 @@
-import { prefixType } from '../util';
+import { prefixType } from '../utils';
 
 const UPDATE_LOADING_ACTION = 'updateLoading';
 const removePrefixType = effectName => {
@@ -13,7 +13,7 @@ export default {
     };
   },
   onEffect(effect, sagaEffects, model, actionType) {
-    return function*(actionAction, effects = sagaEffects) {
+    return function*(action, effects = sagaEffects) {
       const { put } = effects;
       const effectName = removePrefixType(actionType);
       yield put({
