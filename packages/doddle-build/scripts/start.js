@@ -35,9 +35,6 @@ const args = process.argv.slice(ArgStart).reduce((pre, cur, index, arr) => {
   return pre;
 }, {});
 
-// Tools like Cloud9 rely on this.
-const HOST = args.host || 'localhost';
-const port = parseInt(args.port, 10) || 3000;
 // We require that you explicitly set browsers and do not fall back to
 // browserslist defaults.
 // const { checkBrowsers } = require('react-dev-utils/browsersHelper');
@@ -62,20 +59,28 @@ const config = configFactory('development', true);
   proxyConfig,
   urls.lanUrlForConfig
 ); */
-const serverConfig = {
-  host: HOST,
-  port: port,
-  hot: true,
-  inline: true,
-  open: true,
-  quiet: true, // don't console the compile message
-  overlay: true,
-  stats: {
-    colors: true,
+const serverConfig = Object.assign(
+  {
+    host: 'localhost',
+    port: '3000',
+    hot: true,
+    inline: true,
+    open: false,
+    quiet: true, // don't console the compile message
+    overlay: true,
+    stats: {
+      colors: true,
+    },
+    // contentBase: [paths.appSrc],
+    watchContentBase: true,
   },
-  // contentBase: [paths.appSrc],
-  watchContentBase: true,
-};
+  args,
+  { open: args.open === 'true' }
+);
+
+// Tools like Cloud9 rely on this.
+const HOST = serverConfig.host;
+const port = parseInt(serverConfig.port, 10);
 
 // this is a bug when use node Api to launch an WebpackDevServer, the hot update did not work
 // the problem mentioned at https://stackoverflow.com/questions/52818569/webpack-dev-server-hot-reload-doesnt-work-via-node-api
@@ -97,6 +102,7 @@ devServer.listen(port, HOST, err => {
   // This now has been deprecated in favor of jsconfig/tsconfig.json
   // This lets you use absolute paths in imports inside large monorepos:
   console.log(chalk.cyan('Starting the development server...\n'));
+  console.log('config', serverConfig);
   // openBrowser(urls.localUrlForBrowser);
 });
 

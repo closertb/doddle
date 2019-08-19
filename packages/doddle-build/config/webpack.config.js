@@ -99,15 +99,47 @@ module.exports = function(webpackEnv = 'development') {
     config.module.rules.push(
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              // minimize: true,
+              modules: true,
+              localIdentName: '[local]_[hash:base64:5]',
+            },
+          },
+        ],
       },
       {
         test: /\.scss$/,
-        use: ['style-loader', 'css-loader', 'sass-loader'],
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              // minimize: true,
+              modules: true,
+              localIdentName: '[local]_[hash:base64:5]',
+            },
+          },
+          'sass-loader',
+        ],
       },
       {
         test: /\.less$/,
-        use: ['style-loader', 'css-loader', 'less-loader'],
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              // minimize: true,
+              modules: true,
+              localIdentName: '[local]_[hash:base64:5]',
+            },
+          },
+          'less-loader',
+        ],
       }
     );
     // 当开启了hot：true，会自动添加hotReplaceModule
@@ -116,15 +148,47 @@ module.exports = function(webpackEnv = 'development') {
     config.module.rules.push(
       {
         test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader'],
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              // minimize: true,
+              modules: true,
+              localIdentName: '[local]_[hash:base64:5]',
+            },
+          },
+        ],
       },
       {
         test: /\.scss$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              // minimize: true,
+              modules: true,
+              localIdentName: '[local]_[hash:base64:5]',
+            },
+          },
+          'sass-loader',
+        ],
       },
       {
         test: /\.less$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader', 'less-loader'],
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              // minimize: true,
+              modules: true,
+              localIdentName: '[local]_[hash:base64:5]',
+            },
+          },
+          'less-loader',
+        ],
       }
     );
     config.plugins.push(
