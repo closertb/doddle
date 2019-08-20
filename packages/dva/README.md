@@ -6,7 +6,7 @@ order: 2
 ### 安装
 
 ```shell
-npm install @core/dva
+npm install @doddle/dva
 ```
 
 ### 使用
@@ -24,7 +24,6 @@ const app = dva();
 hook({
   app,
   plugins, // 自定义插件
-  legacyLoading: false, // 开启兼容模式
 }); //
 
 app.use(...);
@@ -246,75 +245,6 @@ function (props) {
   return <Spin loading={props.loading.save}></Spin><div onClick={onSave}>保存</div>
 }
 ```
-
-#### legacyLoading 插件
-
-主要是为了兼容 carno model 扩展的 with 系列方法。默认不推荐使用，如果需要使用此插件，则需要开启 legacyLoading 参数。
-
-启用插件：
-
-```javascript
-hook({
-  app,
-  legacyLoading: true, // 开启loading兼容模式
-});
-```
-
-使用`with`系列方法:
-
-```javascript
-
-import { legacyLoadingUtil } from '@core/dva';
-const {  withLoading, withConfirmLoading, withSpinning } = legacyLoadingUtil; // 注意，引入方式有所调整
-
-export default {
-  state: {
-    loading: {
-      list: false,
-      confirm: false,
-      spinning: false,
-    },
-  },
-  effects: {
-    * fetchUsers({ payload }, { put, select, call }) {
-      // 介绍 withLoading 用法
-      // 发送请求前，显示loading状态，完成后结束loading状态.如果请求成功则提示加载用户成功,失败则提示
-      const getList = withLoading(service.user.getList, {
-        key: 'list',
-        successMsg: '加载用户成功',
-        errorMsg: '加载用户失败'
-      });
-      const getList = withLoading(service.user.getList, {
-        key: 'list',
-        successMsg:'加载用户成功',
-        errorMsg:'加载用户失败',
-        withDone: true
-      });
-      const users = yeild call(getList, { departId: 12 });
-      // 对比 withConfirmLoading 用法
-      const saveUser = withLoading(service.user.save, 'confirm', '添加用户成功');
-      const saveUser = withConfirmLoading(service.user.save, '添加用户成功');
-      // 对比 withSpinning 用法
-      withLoading(service.user.getList, 'spinning', '刷新成功');
-      withSpinning(service.user.getList, '刷新成功');
-      // 介绍 withMessage 用法
-      const getList = withMessage(service.user.getList, '加载用户成功', '加载用户失败');
-      // 仅处理成功/失败的消息提示
-      const users = yeild call(getList, userId, deptId);
-    }
-  }
-})
-```
-
-> 注意，即使开启了 legacyLoading 插件，仍然会使用 loading 插件，两者公用 loading state，如果 key 值存在重复会出现意外的情况。
-
-### 对比 model.extend
-
-- model.extend 废弃，新模式不需要使用 model.extend, 如确实存在 extend 需求，建议使用[官方 extend 模块](https://github.com/dvajs/dva-model-extend)
-- listen, 废弃 beforeEnterListener 功能
-- reducer, 废弃 resetState、showLoading、hideLoading、updateSearch、resetSearch、clearLocalState、resetLocalState
-- put effect, 废弃 put.sync
-- localizeState effect，废弃
 
 ### 如何编写插件
 

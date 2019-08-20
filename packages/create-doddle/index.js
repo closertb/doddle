@@ -11,10 +11,10 @@ const excute = require('./src/index');
 
 // 四种模板。对应我git仓库四个仓库地址
 const tempIndex = {
-  react: 'reactTemplate', // react 模板
-  vue: 'vueTemplate', // vue 模板
-  h5: 'h5Template', // h5模板
-  dva: 'dvaTemplate', // dva模板
+  react: 'react', // react 模板
+  vue: 'master', // vue 模板
+  h5: 'master', // h5模板
+  dva: 'dva', // dva模板
 };
 
 let projectName;
@@ -33,10 +33,10 @@ const program = new commander.Command(packageJson.name)
     // 允许目标项目名和要复制的模板类型名顺序颠倒
     if (tempIndex[index] || tempIndex[name]) {
       if (tempIndex[index]) {
-        templateName = tempIndex[index];
+        templateName = tempIndex[index] || 'master';
         projectName = name;
       } else {
-        templateName = tempIndex[name];
+        templateName = tempIndex[name] || 'master';
         projectName = index;
       }
     }

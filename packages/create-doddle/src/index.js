@@ -6,7 +6,7 @@ const red = chalk.red;
 const green = chalk.green;
 const { currentPath, downloadByGit } = utils;
 let forceDel = false;
-let tempName;
+let branchName;
 let projectName;
 
 // 重写package.json
@@ -19,7 +19,7 @@ async function rewriteJson() {
     }
     const json = await fs.readJson(path);
     json.name = projectName;
-    json.description = `this project is based on ${tempName}`;
+    json.description = `this project is based on template of branch ${branchName}`;
     await fs.writeJson(path, json, { spaces: '\t' });
     console.log(green('format package.json success!'));
   } catch (err) {
@@ -42,7 +42,7 @@ async function unrelatedFileRemove(parentFile, callback) {
 
 // 重命名gitClone下来的文件为项目文件名
 async function renameFile() {
-  const oldPath = currentPath + tempName;
+  const oldPath = currentPath + 'template';
   const nowPath = currentPath + projectName;
   try {
     await fs.rename(oldPath, nowPath);
@@ -53,7 +53,7 @@ async function renameFile() {
 }
 
 async function create(temp, project, force = false) {
-  tempName = temp;
+  branchName = temp;
   projectName = project;
   forceDel = force;
   const file = currentPath + projectName;
@@ -64,7 +64,7 @@ async function create(temp, project, force = false) {
       if (forceDel) {
         console.log(green('force remove the exist directory'));
         await fs.remove(file);
-        downloadByGit(renameFile, tempName);
+        downloadByGit(renameFile, branchName);
       } else {
         console.log(
           chalk.red(
@@ -78,7 +78,7 @@ async function create(temp, project, force = false) {
       return;
     }
     // 若不存在，直接从git下载
-    downloadByGit(renameFile, tempName);
+    downloadByGit(renameFile, branchName);
   } catch (err) {
     console.error(red(err));
   }

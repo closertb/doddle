@@ -15,12 +15,11 @@ function isWindows() {
   );
 }
 
-function downloadByGit(callback, template) {
-  console.log(green('start download'));
-  console.log(`git@github.com:closertb/${template}.git`);
+function downloadByGit(callback, branch) {
+  console.log(green('start download:', `${branch} template`));
   const result = spawn(
     'git',
-    ['clone', `git@github.com:closertb/${template}.git`],
+    ['clone', `-b ${branch}`, 'https://github.com/closertb/template.git'],
     { stdio: 'inherit' }
   );
   const error = result.error;
@@ -30,6 +29,7 @@ function downloadByGit(callback, template) {
   }
   callback && callback();
 }
+
 const currentPath = process.cwd().replace(/\\/g, '/') + '/';
 
 module.exports = {
