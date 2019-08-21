@@ -3,7 +3,10 @@ const webpack = require('webpack');
 const paths = require('./paths');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-
+const {
+  WARN_AFTER_BUNDLE_GZIP_SIZE,
+  WARN_AFTER_CHUNK_GZIP_SIZE,
+} = require('./limit');
 const serverPath = 'http://127.0.0.1';
 
 /* // Resolve file paths in the same order as webpack
@@ -194,6 +197,12 @@ module.exports = function(webpackEnv = 'development') {
     config.plugins.push(
       new MiniCssExtractPlugin({ filename: 'index.[contenthash:8].css' })
     );
+  }
+  if (isProduction) {
+    config.performance = {
+      maxAssetSize: WARN_AFTER_CHUNK_GZIP_SIZE,
+      maxEntrypointSize: WARN_AFTER_BUNDLE_GZIP_SIZE,
+    };
   }
   return config;
 };
