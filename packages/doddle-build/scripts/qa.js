@@ -40,12 +40,12 @@ build('development')
           ' to the line before.\n'
       );
     } else {
-      console.log(chalk.green('Compiled successfully.\n'));
+      console.log(chalk.green('Compiled successfully!\n'));
     }
     // console.log(`step last: Compiled successfully, the size is ${chalk.green(previousFileSizes)}\n`);
-    process.exit(1);
   })
   .catch(err => {
+    console.log('what', err);
     if (err && err.message) {
       console.log(err.message);
     }

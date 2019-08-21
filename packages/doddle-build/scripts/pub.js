@@ -12,7 +12,16 @@ process.on('unhandledRejection', err => {
 
 const chalk = require('chalk');
 const { build } = require('./base');
+const FileSizeReporter = require('../config/fileSizeReporter');
+const paths = require('../config/paths');
+const {
+  WARN_AFTER_BUNDLE_GZIP_SIZE,
+  WARN_AFTER_CHUNK_GZIP_SIZE,
+} = require('../config/limit');
 
+const measureFileSizesBeforeBuild =
+  FileSizeReporter.measureFileSizesBeforeBuild;
+const printFileSizesAfterBuild = FileSizeReporter.printFileSizesAfterBuild;
 // Create a webpack compiler that is configured with custom messages.
 // Load proxy config
 // const proxySetting = require(paths.appPackageJson).proxy;
@@ -22,9 +31,11 @@ const { build } = require('./base');
   proxyConfig,
   urls.lanUrlForConfig
 ); */
-
-build('production')
-  .then(({ warnings }) => {
+measureFileSizesBeforeBuild(paths.appBuild)
+  .then(previousFileSizes => {
+    return build('production', previousFileSizes);
+  })
+  .then(({ stats, previousFileSizes, warnings }) => {
     // console.log('va:', stats, previousFileSizes);
     if (warnings.length) {
       console.log(chalk.yellow('Compiled with warnings.\n'));
@@ -42,8 +53,16 @@ build('production')
     } else {
       console.log(chalk.green('Compiled successfully.\n'));
     }
+    console.log('File sizes after gzip:\n');
+    printFileSizesAfterBuild(
+      stats,
+      previousFileSizes,
+      paths.appBuild,
+      WARN_AFTER_BUNDLE_GZIP_SIZE,
+      WARN_AFTER_CHUNK_GZIP_SIZE
+    );
+    console.log('done');
     // console.log(`step last: Compiled successfully, the size is ${chalk.green(previousFileSizes)}\n`);
-    process.exit(1);
   })
   .catch(err => {
     if (err && err.message) {

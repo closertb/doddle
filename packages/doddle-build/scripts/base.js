@@ -7,7 +7,7 @@ const configFactory = require('../config/webpack.config');
 const clearConsole = require('../config/clearConsole');
 const paths = require('../config/paths');
 
-const isInteractive = process.stdout.isTTY;
+let isInteractive = process.stdout.isTTY;
 
 function printInstructions(appName, serverConfig) {
   console.log();
@@ -34,8 +34,9 @@ function createCompiler(config, serverConfig) {
   // "Compiler" is a low-level interface to Webpack.
   // It lets us listen to some events and provide our own custom messages.
   let compiler;
+  // only run start with multi compile;
   let isFirstCompile = true;
-
+  let isLocalCompile = !!serverConfig;
   try {
     compiler = webpack(config);
   } catch (err) {
@@ -50,10 +51,16 @@ function createCompiler(config, serverConfig) {
   // bundle, so if you refresh, it'll wait instead of serving the old one.
   // "invalid" is short for "bundle invalidated", it doesn't imply any errors.
   compiler.hooks.invalid.tap('invalid', () => {
-    if (isInteractive) {
+    if (isLocalCompile && isInteractive) {
       clearConsole();
     }
-    console.log('Compiling...');
+    if (isLocalCompile) {
+      console.log();
+      console.log('step 2: Compiling...');
+      console.log();
+    } else {
+      console.log('Compiling...');
+    }
   });
 
   // "done" event fires when Webpack has finished recompiling the bundle.
@@ -76,10 +83,11 @@ function createCompiler(config, serverConfig) {
 
     const messages = formatWebpackMessages(statsData);
     const isSuccessful = !messages.errors.length && !messages.warnings.length;
-    if (isSuccessful) {
+
+    if (isLocalCompile && isSuccessful) {
       console.log(chalk.green('Compiled successfully!'));
     }
-    if (isSuccessful && (isInteractive || isFirstCompile)) {
+    if (isLocalCompile && isSuccessful && (isInteractive || isFirstCompile)) {
       printInstructions('demo', serverConfig);
     }
     isFirstCompile = false;
@@ -114,7 +122,6 @@ function createCompiler(config, serverConfig) {
       );
     }
   });
-  console.log('create');
   return compiler;
 }
 
@@ -129,14 +136,14 @@ function createCompiler(config, serverConfig) {
 ); */
 
 // Create the production build and print the deployment instructions.
-function build(nodeEnv) {
+function build(nodeEnv, previousFileSizes) {
   const config = configFactory(nodeEnv, false);
   console.log('Creating an optimized production build...');
   // Remove all content but keep the directory so that
   // if you're in it, you don't end up in Trash
   fs.emptyDirSync(paths.output);
   console.log(`step 1: clean dist content ${chalk.red('success')}`);
-  const compiler = createCompiler(config);
+  const compiler = createCompiler(config, false);
   return new Promise((resolve, reject) => {
     compiler.run((err, stats) => {
       let messages;
@@ -150,7 +157,7 @@ function build(nodeEnv) {
         });
       } else {
         messages = formatWebpackMessages(
-          stats.toJson({ all: false, warnings: true, errors: true })
+          stats.toJson({ all: false, warnings: true, errors: false })
         );
       }
       if (messages.errors.length) {
@@ -178,6 +185,7 @@ function build(nodeEnv) {
 
       return resolve({
         stats,
+        previousFileSizes,
         warnings: messages.warnings,
       });
     });

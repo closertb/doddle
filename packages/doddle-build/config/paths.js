@@ -40,6 +40,7 @@ module.exports = {
   indexJs: resolveApp('src/index.js'),
   appEjs: resolveApp('index.ejs'),
   output: `${appDirectory}/dist`,
+  appBuild: resolveApp('dist'),
   appPackageJson: resolveApp('package.json'),
   appSrc: resolveApp('src'),
   proxySetup: resolveApp('src/setupProxy.js'),
