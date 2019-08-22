@@ -19,7 +19,7 @@ function downloadByGit(callback, branch) {
   console.log(green('start download:', `${branch} template`));
   const result = spawn(
     'git',
-    ['clone', `-b ${branch}`, 'https://github.com/closertb/template.git'],
+    ['clone', '-b', `${branch}`, 'https://github.com/closertb/template.git'],
     { stdio: 'inherit' }
   );
   const error = result.error;
