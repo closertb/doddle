@@ -23,12 +23,5 @@
     "cross-spawn": "^5.1.0",
     "fs-extra": "^7.0.0"
   },
-  "devDependencies": {
-    "@babel/cli": "^7.2.0",
-    "@babel/core": "^7.2.0",
-    "@babel/plugin-proposal-object-rest-spread": "^7.2.0",
-    "@babel/plugin-transform-runtime": "^7.2.0",
-    "@babel/preset-env": "^7.2.0"
-  },
   "gitHead": "c2d26a84e587d5906b8280f9fa74354bf2361783"
 }

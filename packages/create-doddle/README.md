@@ -15,11 +15,12 @@ npx create-doddle [options] templateType projectName
 
 templateType(模板类型)，有四种模板可选：
 
-- react（当前仅该项可用）
-- vue
+- react
 - dva
-- h5
-  projectName(项目名称)，基于当前命令执行路径，并将模板拷贝到这个项目文件夹下
+- vue (暂无)
+- h5 (暂无)
+
+projectName(项目名称)，基于当前命令执行路径，并将模板拷贝到这个项目文件夹下
 
 options(可选参数)：
 
