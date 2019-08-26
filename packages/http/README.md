@@ -40,7 +40,7 @@ head(url, options);
 // example
 
 // util/http.js
-import { Http } from 'carno/addons';
+import { Http } from '@doddle/http';
 
 // 创建base http实例
 export default Http.create({

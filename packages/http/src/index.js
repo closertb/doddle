@@ -1,5 +1,5 @@
 import qs from 'qs';
-import middlewares from '../middlewares';
+import middlewares from './middlewares';
 
 const baseFetch = Symbol();
 const BIND_KEYS = [
