@@ -15,6 +15,10 @@ module.exports = {
     // http://eslint.cn/docs/rules/linebreak-style
     'linebreak-style': 0,
 
+    // https://eslint.org/docs/rules/operator-linebreak
+    // The default configuration is "after", { "overrides": { "?": "before", ":": "before" } }
+    'operator-linebreak': ['error', 'after'],
+
     // 强制行的最大长度
     // http://eslint.cn/docs/rules/max-len
     'max-len': [2, 120],
