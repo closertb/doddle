@@ -75,8 +75,9 @@ module.exports = function(webpackEnv = 'development') {
       splitChunks: {
         minSize: 30000,
         cacheGroups: {
-          vendors: {
-            test: /[\\/]node_modules[\\/]/,
+          antd: {
+            test: /[\\/]node_modules[\\/](antd|antd-doddle)[\\/]/,
+            name: 'antd',
             chunks: 'all',
           },
         },
@@ -101,18 +102,9 @@ module.exports = function(webpackEnv = 'development') {
   if (isServer) {
     config.module.rules.push(
       {
+        // 对于纯css文件，由于面向的是第三方库，无需开启module
         test: /\.css$/,
-        use: [
-          'style-loader',
-          {
-            loader: 'css-loader',
-            options: {
-              // minimize: true,
-              modules: true,
-              localIdentName: '[local]_[hash:base64:5]',
-            },
-          },
-        ],
+        use: ['style-loader', 'css-loader'],
       },
       {
         test: /\.scss$/,
@@ -138,10 +130,17 @@ module.exports = function(webpackEnv = 'development') {
             options: {
               // minimize: true,
               modules: true,
+              context: path.resolve(__dirname, 'src'),
               localIdentName: '[local]_[hash:base64:5]',
             },
           },
-          'less-loader',
+          {
+            loader: 'less-loader',
+            options: {
+              // https://github.com/ant-design/ant-motion/issues/44
+              javascriptEnabled: true,
+            },
+          },
         ],
       }
     );
@@ -150,18 +149,9 @@ module.exports = function(webpackEnv = 'development') {
   } else {
     config.module.rules.push(
       {
+        // 对于纯css文件，由于面向的是第三方库，无需开启module
         test: /\.css$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          {
-            loader: 'css-loader',
-            options: {
-              // minimize: true,
-              modules: true,
-              localIdentName: '[local]_[hash:base64:5]',
-            },
-          },
-        ],
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
       },
       {
         test: /\.scss$/,
@@ -190,7 +180,13 @@ module.exports = function(webpackEnv = 'development') {
               localIdentName: '[local]_[hash:base64:5]',
             },
           },
-          'less-loader',
+          {
+            loader: 'less-loader',
+            options: {
+              // https://github.com/ant-design/ant-motion/issues/44
+              javascriptEnabled: true,
+            },
+          },
         ],
       }
     );
