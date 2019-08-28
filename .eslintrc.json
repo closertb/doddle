@@ -1,6 +1,6 @@
 {
   "parser": "babel-eslint",
-  "extends": ["./packages/eslint-config-doddle/index"],
+  "extends": ["./packages/eslint-config-doddle/index.js"],
   "env": {
     "browser": true,
     "commonjs": true,
