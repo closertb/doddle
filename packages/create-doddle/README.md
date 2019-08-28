@@ -15,8 +15,9 @@ npx create-doddle [options] templateType projectName
 
 templateType(模板类型)，有四种模板可选：
 
-- react
-- dva
+- react 入门级 react 模板
+- dva dva 模板
+- antd 中后台项目模板
 - vue (暂无)
 - h5 (暂无)
 

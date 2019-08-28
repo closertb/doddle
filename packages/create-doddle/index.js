@@ -13,6 +13,7 @@ const excute = require('./src/index');
 const tempIndex = {
   react: 'react', // react 模板
   vue: 'master', // vue 模板
+  antd: 'antd', // 中后台项目模板
   h5: 'master', // h5模板
   dva: 'dva', // dva模板
 };

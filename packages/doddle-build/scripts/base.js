@@ -137,7 +137,8 @@ function createCompiler(config, serverConfig) {
 
 // Create the production build and print the deployment instructions.
 function build(nodeEnv, previousFileSizes) {
-  const config = configFactory(nodeEnv, false);
+  const packageJson = fs.readJSONSync(paths.appPackageJson) || {};
+  const config = configFactory(nodeEnv, packageJson.webpack);
   console.log('Creating an optimized production build...');
   // Remove all content but keep the directory so that
   // if you're in it, you don't end up in Trash

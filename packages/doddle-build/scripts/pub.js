@@ -61,7 +61,7 @@ measureFileSizesBeforeBuild(paths.appBuild)
       WARN_AFTER_BUNDLE_GZIP_SIZE,
       WARN_AFTER_CHUNK_GZIP_SIZE
     );
-    console.log('done');
+    console.log();
     // console.log(`step last: Compiled successfully, the size is ${chalk.green(previousFileSizes)}\n`);
   })
   .catch(err => {

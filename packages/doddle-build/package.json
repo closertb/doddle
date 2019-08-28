@@ -57,5 +57,8 @@
     "webpack-cli": "^3.1.2",
     "webpack-dev-server": "^3.1.10"
   },
-  "gitHead": "c2d26a84e587d5906b8280f9fa74354bf2361783"
+  "gitHead": "c2d26a84e587d5906b8280f9fa74354bf2361783",
+  "devDependencies": {
+    "webpack-bundle-analyzer": "^3.4.1"
+  }
 }

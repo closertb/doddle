@@ -3,6 +3,9 @@ const webpack = require('webpack');
 const paths = require('./paths');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+  .BundleAnalyzerPlugin;
+
 const {
   WARN_AFTER_BUNDLE_GZIP_SIZE,
   WARN_AFTER_CHUNK_GZIP_SIZE,
@@ -21,12 +24,54 @@ const resolveModule = (resolveFn, filePath) => {
 
   return resolveFn(`${filePath}.js`);
 }; */
+function getSplitChunkConfig(useAntd) {
+  return useAntd
+    ? {
+        antd: {
+          test: /[\\/]node_modules[\\/](antd|@ant-design)[\\/]/,
+          name: 'antd',
+          minChunks: 1,
+          chunks: 'all',
+          priority: -10,
+        },
+        vendors: {
+          //cacheGroups重写继承配置，设为false不继承
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          minChunks: 1,
+          priority: -20,
+        },
+        index: {
+          minChunks: 1,
+          priority: -30,
+          name: 'index',
+          reuseExistingChunk: true,
+        },
+        default: false,
+      }
+    : {
+        vendors: {
+          //cacheGroups重写继承配置，设为false不继承
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          minChunks: 1,
+          priority: -20,
+        },
+      };
+}
 
-module.exports = function(webpackEnv = 'development') {
+const initConfig = {
+  useAnalyse: false, // 是否开启打包体积分析
+  useAntd: false, // 是否开启antd打包优化
+  serverPath: './',
+};
+module.exports = function(webpackEnv = 'development', extConfig = initConfig) {
   const NODE_ENV = process.env.NODE_ENV;
   const isServer = NODE_ENV === 'local';
   const isProduction = webpackEnv === 'production';
-
+  const openAnalyse = extConfig.useAnalyse || false;
+  const serverPath = extConfig.serverPath || './';
+  console.log('use', extConfig.useAntd);
   const config = {
     entry: './src/index.js',
     devtool: isProduction ? false : 'cheap-source-map',
@@ -34,11 +79,11 @@ module.exports = function(webpackEnv = 'development') {
     output: {
       filename: isServer ? 'bundle.js' : 'bundle.[contenthash:8].js',
       chunkFilename: isServer
-        ? 'async.bundle.js'
-        : 'async.bundle.[contenthash:8].js',
+        ? '[name].bundle.js'
+        : '[name].bundle.[contenthash:8].js',
       // eslint-disable-next-line no-undef
       path: path.resolve(__dirname, paths.output),
-      publicPath: isProduction ? serverPath : '/',
+      publicPath: isProduction ? serverPath : './',
     },
     module: {
       rules: [
@@ -74,13 +119,9 @@ module.exports = function(webpackEnv = 'development') {
     optimization: {
       splitChunks: {
         minSize: 30000,
-        cacheGroups: {
-          antd: {
-            test: /[\\/]node_modules[\\/](antd|antd-doddle)[\\/]/,
-            name: 'antd',
-            chunks: 'all',
-          },
-        },
+        chunks: 'all', // all, async, and initial, all means include all types of chunks
+        name: false,
+        cacheGroups: getSplitChunkConfig(!isServer && extConfig.useAntd),
       },
     },
     plugins: [
@@ -175,7 +216,6 @@ module.exports = function(webpackEnv = 'development') {
           {
             loader: 'css-loader',
             options: {
-              // minimize: true,
               modules: true,
               localIdentName: '[local]_[hash:base64:5]',
             },
@@ -193,6 +233,7 @@ module.exports = function(webpackEnv = 'development') {
     config.plugins.push(
       new MiniCssExtractPlugin({ filename: 'index.[contenthash:8].css' })
     );
+    openAnalyse && config.plugins.push(new BundleAnalyzerPlugin());
   }
   if (isProduction) {
     config.performance = {
