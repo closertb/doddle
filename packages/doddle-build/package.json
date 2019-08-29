@@ -1,6 +1,6 @@
 {
   "name": "@doddle/doddle-build",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "a webpack compiler like react-scripts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -49,14 +49,15 @@
     "less": "3.9.0",
     "less-loader": "^4.1.0",
     "mini-css-extract-plugin": "^0.4.4",
+    "optimize-css-assets-webpack-plugin": "^5.0.3",
     "recursive-readdir": "^2.2.2",
     "strip-ansi": "^5.2.0",
     "style-loader": "^0.20.1",
     "url-loader": "^0.6.2",
     "webpack": "^4.23.1",
+    "webpack-bundle-analyzer": "^3.4.1",
     "webpack-cli": "^3.1.2",
-    "webpack-dev-server": "^3.1.10",
-    "webpack-bundle-analyzer": "^3.4.1"
+    "webpack-dev-server": "^3.1.10"
   },
   "gitHead": "c2d26a84e587d5906b8280f9fa74354bf2361783"
 }

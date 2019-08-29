@@ -38,7 +38,7 @@ const args = process.argv.slice(ArgStart).reduce((pre, cur, index, arr) => {
 // We require that you explicitly set browsers and do not fall back to
 // browserslist defaults.
 // const { checkBrowsers } = require('react-dev-utils/browsersHelper');
-const config = configFactory('development', true);
+const config = configFactory('development');
 
 // const protocol = 'http';
 // const appName = require(paths.appPackageJson).name;
@@ -96,7 +96,7 @@ devServer.listen(port, HOST, err => {
   }
   if (isInteractive) {
     // console.log('clear...');
-    clearConsole();
+    // clearConsole();
   }
   // We used to support resolving modules according to `NODE_PATH`.
   // This now has been deprecated in favor of jsconfig/tsconfig.json

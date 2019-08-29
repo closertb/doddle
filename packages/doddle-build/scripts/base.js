@@ -9,6 +9,15 @@ const paths = require('../config/paths');
 
 let isInteractive = process.stdout.isTTY;
 
+let timeRecord = {
+  start: 0,
+  setStart() {
+    this.start = Date.now();
+  },
+  getTime() {
+    return ((Date.now() - this.start) / 1000).toFixed(2) + 's';
+  },
+};
 function printInstructions(appName, serverConfig) {
   console.log();
   console.log(`You can now view ${chalk.bold(appName)} in the browser.`);
@@ -33,6 +42,7 @@ function printInstructions(appName, serverConfig) {
 function createCompiler(config, serverConfig) {
   // "Compiler" is a low-level interface to Webpack.
   // It lets us listen to some events and provide our own custom messages.
+  timeRecord.setStart();
   let compiler;
   // only run start with multi compile;
   let isFirstCompile = true;
@@ -51,23 +61,15 @@ function createCompiler(config, serverConfig) {
   // bundle, so if you refresh, it'll wait instead of serving the old one.
   // "invalid" is short for "bundle invalidated", it doesn't imply any errors.
   compiler.hooks.invalid.tap('invalid', () => {
-    if (isLocalCompile && isInteractive) {
-      clearConsole();
-    }
-    if (isLocalCompile) {
-      console.log();
-      console.log('step 2: Compiling...');
-      console.log();
-    } else {
-      console.log('Compiling...');
-    }
+    timeRecord.setStart();
+    console.log('Compiling...');
   });
 
   // "done" event fires when Webpack has finished recompiling the bundle.
   // Whether or not you have warnings or errors, you will get this event.
   compiler.hooks.done.tap('done', async stats => {
     if (isInteractive) {
-      clearConsole();
+      // clearConsole();
     }
 
     // We have switched off the default Webpack output in WebpackDevServer
@@ -86,8 +88,14 @@ function createCompiler(config, serverConfig) {
 
     if (isLocalCompile && isSuccessful) {
       console.log(chalk.green('Compiled successfully!'));
+      console.log();
     }
     if (isLocalCompile && isSuccessful && (isInteractive || isFirstCompile)) {
+      timeRecord.end = Date.now();
+      if (!isFirstCompile) {
+        clearConsole();
+      }
+      console.log('the compiler time is:', chalk.cyan(timeRecord.getTime()));
       printInstructions('demo', serverConfig);
     }
     isFirstCompile = false;
@@ -106,6 +114,9 @@ function createCompiler(config, serverConfig) {
 
     // Show warnings if no errors were found.
     if (messages.warnings.length) {
+      console.log();
+      console.log('the compiler time is:', chalk.cyan(timeRecord.getTime()));
+      console.log();
       console.log(chalk.yellow('Compiled with warnings.\n'));
       console.log(messages.warnings.join('\n\n'));
 
@@ -114,11 +125,6 @@ function createCompiler(config, serverConfig) {
         '\nSearch for the ' +
           chalk.underline(chalk.yellow('keywords')) +
           ' to learn more about each warning.'
-      );
-      console.log(
-        'To ignore, add ' +
-          chalk.cyan('// eslint-disable-next-line') +
-          ' to the line before.\n'
       );
     }
   });
