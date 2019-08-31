@@ -13,7 +13,7 @@ process.on('unhandledRejection', err => {
 // const fs = require('fs');
 const chalk = require('chalk');
 const WebpackDevServer = require('webpack-dev-server');
-// const paths = require('../config/paths');
+const paths = require('../config/paths');
 const clearConsole = require('../config/clearConsole');
 const configFactory = require('../config/webpack.config');
 const { createCompiler } = require('./base');
@@ -38,7 +38,8 @@ const args = process.argv.slice(ArgStart).reduce((pre, cur, index, arr) => {
 // We require that you explicitly set browsers and do not fall back to
 // browserslist defaults.
 // const { checkBrowsers } = require('react-dev-utils/browsersHelper');
-const config = configFactory('development', true);
+const title = require(paths.appPackageJson).title || 'doddle site';
+const config = configFactory('development', { title });
 
 // const protocol = 'http';
 // const appName = require(paths.appPackageJson).name;

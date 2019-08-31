@@ -127,6 +127,7 @@ module.exports = function(webpackEnv = 'development', extConfig = initConfig) {
     plugins: [
       new HtmlWebpackPlugin({
         template: paths.appEjs,
+        title: '',
       }),
       new webpack.DefinePlugin({
         'process.env': { NODE_ENV: "'" + NODE_ENV + "'" },
