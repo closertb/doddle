@@ -2,16 +2,17 @@ const path = require('path');
 const webpack = require('webpack');
 const paths = require('./paths');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin'); // css 代码打包成文件注入html
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
-  .BundleAnalyzerPlugin;
+  .BundleAnalyzerPlugin; // 打包体积
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin'); // css 代码压缩
 
 const {
   WARN_AFTER_BUNDLE_GZIP_SIZE,
   WARN_AFTER_CHUNK_GZIP_SIZE,
 } = require('./limit');
-const serverPath = 'http://127.0.0.1';
 
+const { isSameObject } = require('./utils');
 /* // Resolve file paths in the same order as webpack
 const resolveModule = (resolveFn, filePath) => {
   const extension = moduleFileExtensions.find(extension =>
@@ -60,18 +61,14 @@ function getSplitChunkConfig(useAntd) {
       };
 }
 
-const initConfig = {
-  useAnalyse: false, // 是否开启打包体积分析
-  useAntd: false, // 是否开启antd打包优化
-  serverPath: './',
-};
-module.exports = function(webpackEnv = 'development', extConfig = initConfig) {
+function build(webpackEnv = 'development', extConfig) {
   const NODE_ENV = process.env.NODE_ENV;
   const isServer = NODE_ENV === 'local';
   const isProduction = webpackEnv === 'production';
   const openAnalyse = extConfig.useAnalyse || false;
-  const serverPath = extConfig.serverPath || './';
-  console.log('use', extConfig.useAntd);
+  const serverPath = extConfig.publicPath || './';
+  const useEslint = extConfig.useEslint || false;
+
   const config = {
     entry: './src/index.js',
     devtool: isProduction ? false : 'cheap-source-map',
@@ -89,19 +86,8 @@ module.exports = function(webpackEnv = 'development', extConfig = initConfig) {
       rules: [
         {
           test: /\.jsx?$/,
-          loader: 'eslint-loader',
-          enforce: 'pre',
-          include: paths.appSrc, // 指定检查的目录
-          options: {
-            // 这里的配置项参数将会被传递到 eslint 的 CLIEngine
-            formatter: require('eslint-friendly-formatter'), // 指定错误报告的格式规范
-            quiet: true, // 只上报error，不上报warning
-          },
-        },
-        {
-          test: /\.jsx?$/,
           exclude: /(node_modules|bower_components)/,
-          loader: 'babel-loader',
+          loader: 'babel-loader?cacheDirectory=true',
           query: {
             presets: ['@babel/preset-env', '@babel/preset-react'],
           },
@@ -186,8 +172,23 @@ module.exports = function(webpackEnv = 'development', extConfig = initConfig) {
         ],
       }
     );
+    useEslint &&
+      config.rules.unshift({
+        test: /\.jsx?$/,
+        loader: 'eslint-loader',
+        enforce: 'pre',
+        include: paths.appSrc, // 指定检查的目录
+        options: {
+          // 这里的配置项参数将会被传递到 eslint 的 CLIEngine
+          formatter: require('eslint-friendly-formatter'), // 指定错误报告的格式规范
+          quiet: true, // 只上报error，不上报warning
+        },
+      });
     // 当开启了hot：true，会自动添加hotReplaceModule
-    config.plugins.push(new webpack.NamedModulesPlugin());
+    config.plugins.push(
+      new webpack.HotModuleReplacementPlugin(),
+      new webpack.NamedModulesPlugin()
+    );
   } else {
     config.module.rules.push(
       {
@@ -232,7 +233,8 @@ module.exports = function(webpackEnv = 'development', extConfig = initConfig) {
       }
     );
     config.plugins.push(
-      new MiniCssExtractPlugin({ filename: 'index.[contenthash:8].css' })
+      new MiniCssExtractPlugin({ filename: 'index.[contenthash:8].css' }),
+      new OptimizeCSSAssetsPlugin({})
     );
     openAnalyse && config.plugins.push(new BundleAnalyzerPlugin());
   }
@@ -243,4 +245,28 @@ module.exports = function(webpackEnv = 'development', extConfig = initConfig) {
     };
   }
   return config;
+}
+
+const initConfig = {
+  useAnalyse: false, // 是否开启打包体积分析
+  useAntd: false, // 是否开启antd打包优化
+  useEslint: false, // 编译前检查代码格式
+  publicPath: './',
+};
+
+const cache = {};
+
+// 还未生效，还需要继续探索；
+module.exports = function createWithCache(
+  webpackEnv = 'development',
+  extConfig = initConfig
+) {
+  const NODE_ENV = process.env.NODE_ENV;
+  if (cache[NODE_ENV] && isSameObject(cache[NODE_ENV].last, extConfig)) {
+    return cache[NODE_ENV].config;
+  }
+  cache[NODE_ENV] = {};
+  cache[NODE_ENV].last = extConfig;
+  cache[NODE_ENV].config = build(webpackEnv, extConfig);
+  return cache[NODE_ENV].config;
 };

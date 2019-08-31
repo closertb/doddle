@@ -34,16 +34,10 @@ build('development')
           chalk.underline(chalk.yellow('keywords')) +
           ' to learn more about each warning.'
       );
-      console.log(
-        'To ignore, add ' +
-          chalk.cyan('// eslint-disable-next-line') +
-          ' to the line before.\n'
-      );
+      console.log();
     } else {
       console.log(chalk.green('Compiled successfully.\n'));
     }
-    // console.log(`step last: Compiled successfully, the size is ${chalk.green(previousFileSizes)}\n`);
-    process.exit(1);
   })
   .catch(err => {
     if (err && err.message) {

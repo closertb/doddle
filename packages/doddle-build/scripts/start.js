@@ -97,7 +97,7 @@ devServer.listen(port, HOST, err => {
   }
   if (isInteractive) {
     // console.log('clear...');
-    clearConsole();
+    // clearConsole();
   }
   // We used to support resolving modules according to `NODE_PATH`.
   // This now has been deprecated in favor of jsconfig/tsconfig.json
