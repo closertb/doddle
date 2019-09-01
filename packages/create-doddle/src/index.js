@@ -19,6 +19,7 @@ async function rewriteJson() {
     }
     const json = await fs.readJson(path);
     json.name = projectName;
+    json.title = `${projectName} site`;
     json.description = `this project is based on template of branch ${branchName}`;
     await fs.writeJson(path, json, { spaces: '\t' });
     console.log(green('format package.json success!'));

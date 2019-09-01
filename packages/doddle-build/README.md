@@ -27,8 +27,20 @@ scripts: {
 
 1. 运行端口检测？
 2. proxy 支持
-3. 打包参数支持
 
-## 重难点突破
+## 遇到的难点
 
-1.
+1. 热更新通信未启动（live reload），原因是 WebpackDevServer 调用时需要指定 ServerEntrypoints，需要调用 addDevServerEntrypoints 将 hotServer 的配置手动注入到 webpack Config 的配置中；
+   在[stackoverflow][2]有人提了出来,在[官方文档][1]给出了解决方案
+2. 关于 splitChunks 的使用，由于 http1.1 以后支持了多路复用，即一次可以多个请求同时发出。所以以前提出的构建打包成 css + js + css 三个文件的方案放在现在不是那么合适，我们可以将 css 与 js 拆成更多的包，4 个或者 6 个，特别是有 antd 这种大的 ui 项目时，可以把 react 全家桶打成一个包，将 antd 及其周边打成一个包， 详见 webpack.config.js；[参考文章][3]
+3. 热更新不生效，无法做到不刷新页面更新：当把 contentBase 修复成和 compile out（dist）一致时，样式能做到热更新；而 Js 仍然是哪个叼样；要解决这个，是个大工程（可参见 react-hot-loader）。[参考文章][4], [分析文章][5]
+
+## changeLog
+
+- 2019-09-01: 添加动态 title 配置支持，修复 css HMR
+
+[1]: https://webpack.js.org/guides/hot-module-replacement/
+[2]: https://stackoverflow.com/questions/52818569/webpack-dev-server-hot-reload-doesnt-work-via-node-api
+[3]: https://medium.com/dailyjs/webpack-4-splitchunks-plugin-d9fbbe091fd0
+[4]: https://webpack.js.org/concepts/hot-module-replacement/
+[5]: https://segmentfault.com/a/1190000005614604?utm_source=tuicool&utm_medium=referral

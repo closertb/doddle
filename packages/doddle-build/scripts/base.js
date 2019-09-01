@@ -24,14 +24,12 @@ function printInstructions(appName, serverConfig) {
   console.log();
 
   console.log(
-    `  ${chalk.bold('Local:')}            http://localhost:${
-      serverConfig.port
-    }/`
+    `  ${chalk.bold('Local:')}            `,
+    chalk.cyan(`http://localhost:${serverConfig.port}/`)
   );
   console.log(
-    `  ${chalk.bold('On Your Network:')}  http://${address.ip()}:${
-      serverConfig.port
-    }/`
+    `  ${chalk.bold('On Your Network:')}  `,
+    chalk.cyan(`http://${address.ip()}:${serverConfig.port}/`)
   );
 
   console.log();
@@ -95,7 +93,7 @@ function createCompiler(config, serverConfig) {
       if (!isFirstCompile) {
         clearConsole();
       }
-      console.log('the compiler time is:', chalk.cyan(timeRecord.getTime()));
+      console.log('the compile time is:', chalk.cyan(timeRecord.getTime()));
       printInstructions('demo', serverConfig);
     }
     isFirstCompile = false;
@@ -115,7 +113,7 @@ function createCompiler(config, serverConfig) {
     // Show warnings if no errors were found.
     if (messages.warnings.length) {
       console.log();
-      console.log('the compiler time is:', chalk.cyan(timeRecord.getTime()));
+      console.log('the compile time is:', chalk.cyan(timeRecord.getTime()));
       console.log();
       console.log(chalk.yellow('Compiled with warnings.\n'));
       console.log(messages.warnings.join('\n\n'));
@@ -147,7 +145,7 @@ function build(nodeEnv, previousFileSizes) {
   const config = configFactory(
     nodeEnv,
     Object.assign({}, packageJson.webpack, {
-      title: package.title || 'doddle site',
+      title: packageJson.title || 'doddle site',
     })
   );
   console.log('Creating an optimized production build...');

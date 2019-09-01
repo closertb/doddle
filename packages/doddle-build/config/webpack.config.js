@@ -68,6 +68,7 @@ function build(webpackEnv = 'development', extConfig) {
   const openAnalyse = extConfig.useAnalyse || false;
   const serverPath = extConfig.publicPath || './';
   const useEslint = extConfig.useEslint || false;
+  const title = extConfig.title;
 
   const config = {
     entry: './src/index.js',
@@ -113,7 +114,7 @@ function build(webpackEnv = 'development', extConfig) {
     plugins: [
       new HtmlWebpackPlugin({
         template: paths.appEjs,
-        title: '',
+        title,
       }),
       new webpack.DefinePlugin({
         'process.env': { NODE_ENV: "'" + NODE_ENV + "'" },
@@ -143,7 +144,7 @@ function build(webpackEnv = 'development', extConfig) {
             options: {
               // minimize: true,
               modules: true,
-              localIdentName: '[local]_[hash:base64:5]',
+              localIdentName: '[local]_[contenthash:base64:5]',
             },
           },
           'sass-loader',
@@ -159,7 +160,7 @@ function build(webpackEnv = 'development', extConfig) {
               // minimize: true,
               modules: true,
               context: path.resolve(__dirname, 'src'),
-              localIdentName: '[local]_[hash:base64:5]',
+              localIdentName: '[local]_[contenthash:base64:5]',
             },
           },
           {
@@ -185,10 +186,7 @@ function build(webpackEnv = 'development', extConfig) {
         },
       });
     // 当开启了hot：true，会自动添加hotReplaceModule
-    config.plugins.push(
-      new webpack.HotModuleReplacementPlugin(),
-      new webpack.NamedModulesPlugin()
-    );
+    config.plugins.push(new webpack.NamedModulesPlugin());
   } else {
     config.module.rules.push(
       {
@@ -205,7 +203,6 @@ function build(webpackEnv = 'development', extConfig) {
             options: {
               // minimize: true,
               modules: true,
-              localIdentName: '[local]_[hash:base64:5]',
             },
           },
           'sass-loader',
@@ -219,7 +216,6 @@ function build(webpackEnv = 'development', extConfig) {
             loader: 'css-loader',
             options: {
               modules: true,
-              localIdentName: '[local]_[hash:base64:5]',
             },
           },
           {

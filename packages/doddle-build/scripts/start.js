@@ -72,7 +72,7 @@ const serverConfig = Object.assign(
     stats: {
       colors: true,
     },
-    // contentBase: [paths.appSrc],
+    contentBase: [paths.output],
     watchContentBase: true,
   },
   args,
