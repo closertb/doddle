@@ -1,41 +1,91 @@
-// 把对象转换为FormData
-export function toFormData(originData) {
-  if (!originData) return null;
+import qs from 'qs';
 
-  const formData = new FormData();
-  function transformToFormData(formData, data, parentKey) {
-    if (
-      data &&
-      typeof data === 'object' &&
-      !(data instanceof Date) &&
-      !(window.File && data instanceof window.File)
-    ) {
-      Object.keys(data).forEach(key => {
-        let tempKey;
-        if (Array.isArray(data)) {
-          tempKey = parentKey ? `${parentKey}[${key}]` : key;
-        } else {
-          tempKey = parentKey ? `${parentKey}.${key}` : key;
-        }
-        transformToFormData(formData, data[key], tempKey);
-      });
-    } else {
-      const value = data === null ? '' : data;
-      formData.append(parentKey, value);
-    }
+export default function compose(middlewares = []) {
+  if (!Array.isArray(middlewares))
+    throw new TypeError('Middleware stack must be an array!');
+
+  // eslint-disable-next-line no-restricted-syntax
+  for (const fn of middlewares) {
+    if (typeof fn !== 'function')
+      throw new TypeError('Middleware must be composed of functions!');
   }
-  transformToFormData(formData, originData);
-  return formData;
+
+  const { length } = middlewares;
+  return function callback(ctx, next) {
+    let index = -1;
+    function dispatch(i) {
+      let fn = middlewares[i];
+      if (i <= index)
+        return Promise.reject(new Error('next() called multiple times'));
+      index = i;
+      if (i === length) {
+        fn = next;
+      }
+      if (!fn) {
+        return Promise.resolve();
+      }
+      try {
+        return Promise.resolve(fn(ctx, dispatch.bind(null, i + 1)));
+      } catch (error) {
+        return Promise.reject(error);
+      }
+    }
+    return dispatch(0);
+  };
 }
 
-export function getDeployEnv(deployEnv) {
-  // 由于公共组件内部与业务项目使用的getRuntimeEnv为不同的函数，故需要使用window全局变量来保持数据一致
-  if (arguments.length) {
-    window.$$cachedEnv =
-      window.DEPLOY_ENV ||
-      deployEnv ||
-      localStorage.getItem('DEPLOY_ENV') ||
-      'dev';
+// 常用post提交type及对应的dataFormat
+const enums = {
+  default: {
+    type: 'application/x-www-form-urlencoded',
+    format: data => qs.stringify(data),
+  },
+  form: {
+    type: 'multipart/form-data',
+    format: data =>
+      Object.keys(data).reduce((prev, key) => {
+        prev.append(key, data[key]);
+        return prev;
+      }, new FormData()),
+  },
+  json: {
+    type: 'application/json',
+    format: data => JSON.stringify(data),
+  },
+};
+
+function genHeader(posttype = 'default', data) {
+  const { type, format } = enums[posttype];
+  return {
+    method: 'post',
+    mode: 'cors',
+    headers: {
+      'Content-Type': type,
+    },
+    body: format(data),
+  };
+}
+
+export const requestMethods = fetch => ({
+  get(url, params, options = {}) {
+    return fetch(`${url}?${qs.stringify(params)}`, params, options);
+  },
+  post(url, params, options = {}) {
+    const { type } = options;
+    return fetch(`${url}`, genHeader(type, params), options);
+  },
+});
+
+export function defaultErrorHandler(error = {}) {
+  if (
+    error.message &&
+    error.message.toUpperCase().includes('FAILED TO FETCH')
+  ) {
+    // eslint-disable-next-line no-alert
+    window.alert('网络错误，请检查后重试');
+    return {};
   }
-  return window.$$cachedEnv;
+  // eslint-disable-next-line no-alert
+  window.alert(error.message || '请求错误，请稍后重试');
+  return {};
 }

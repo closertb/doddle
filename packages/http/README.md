@@ -6,11 +6,10 @@
 
 `Http`是请求类`class`, 实际使用的时候，需要创建一个实例化的对象, 可通过以下两种方式创建新的实例
 
-- Http.create(config,middlewares)
-- new Http(config,middlewares)
+- Http.create(config)
+- new Http(config)
 
-通过`Http`类静态方法`create`创建的实例，默认会添加`default.config`以及`defaults.middlewares`配置.
-通过`Http`构造器创建的实例，则不会添加默认的配置以及中间件
+两种创建都默认会添加 defaults middlewares`配置.
 
 也可以通过`http`实例的`create`方法创建新的实例，这种方式创建的实例会继承当前实例的`config`以及`middlewares`配置,
 
@@ -25,28 +24,23 @@ http.create(config, mddlewares);
 
 ### 如何发送`ajax`请求
 
-通过上述方法创建`http`实例后，可通过实例上的`get`以及`post`等方法发送`ajax`请求
+通过上述方法创建实例后，可通过实例上的`get`以及`post`等方法发送`ajax`请求
 
 ```javascript
 // url请求的路径，data请求的数据，options参数
-fetch(url, options);
 get(url, data, options);
 post(url, data, options);
-patch(url, data, options);
-put(url, data, options);
-del(url, options);
-head(url, options);
 
 // example
 
 // util/http.js
-import { Http } from '@doddle/http';
+import Http from '@doddle/http';
 
 // 创建base http实例
 export default Http.create({
-  servers: getEnvServers(),
-  contentType: 'form',
-  header() {
+  servers: getEnvServers(), // 必传
+  contentType: 'form', // 默认为''
+  query() {
     return {
       sid: cookie.get('sid'),
       st: cookie.get('st'),
@@ -59,8 +53,8 @@ import http from 'utils/http';
 
 const { get, post } = http.create('admin');
 
-export function getUserList() {
-  return get('/get/user/list');
+export function getUserList(params) {
+  return get('/get/user/list', params);
 }
 
 export function saveUser(user) {
@@ -68,27 +62,17 @@ export function saveUser(user) {
 }
 
 export function deleteUser(id) {
-  return get(
-    '/save/user',
-    { id },
-    {
-      ignoreErrorModal: true,
-    }
-  );
+  return get('/save/user', { id }, { ignoreErrorModal: true });
 }
 ```
 
 **options 参数**
 
-| 参数                       | 说明                                   | 类型                                 | 默认值 |
-| -------------------------- | -------------------------------------- | ------------------------------------ | ------ |
-| ignoreErrorModal           | 忽略默认的错误提示框                   | boolean                              | false  |
-| contentType                | 参数类型, 支持 form,formData,json,text | string                               | form   |
-| customHeader               | 自定义 header                          | {}                                   | -      |
-| customDataTransform        | 自定义数据处理                         | function(data, options, request)     | -      |
-| customRequestErrorHandler  | 自定义请求错误处理                     | function(\_requestError)             | -      |
-| customResponseErrorHandler | 自定义响应错误处理                     | function(\_responseError, \_request) | -      |
-| responseStatusResult       | 自定义响应状态码处理                   | function(\_response)                 | -      |
+| 参数             | 说明                                | 类型    | 默认值 |
+| ---------------- | ----------------------------------- | ------- | ------ |
+| ignoreErrorModal | 忽略默认的错误提示框                | boolean | false  |
+| contentType      | 参数类型, 支持 form, formData, json | string  | form   |
+| customHeader     | 自定义 header                       | {}      |
 
 ### HTTP 中间件
 
