@@ -89,3 +89,7 @@ export function defaultErrorHandler(error = {}) {
   window.alert(error.message || '请求错误，请稍后重试');
   return {};
 }
+
+export function sum(a, b) {
+  return a + b;
+}

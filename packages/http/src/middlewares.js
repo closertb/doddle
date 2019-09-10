@@ -12,10 +12,10 @@ export function addRequestDomain(ctx, next) {
 
 export function addRequestQuery(ctx, next) {
   const {
-    tokens = {},
+    queryParams = {},
     options: { ignoreQuery = false },
   } = ctx;
-  ctx.url = ignoreQuery ? ctx.url : `${ctx.url}?${qs.stringify(tokens)}`;
+  ctx.url = ignoreQuery ? ctx.url : `${ctx.url}?${qs.stringify(queryParams)}`;
   return next();
 }
 

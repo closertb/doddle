@@ -15,7 +15,7 @@ export default class Http {
     this.key = options.contentKey || '';
     this.before = options.beforeRequest || [];
     this.after = options.beforeResponse || [];
-    this.tokens = (query && query()) || {};
+    this.queryParams = (query && query()) || {};
     this.errorHandle = errorHandle;
     this.create = this.create.bind(this);
     this.init();
@@ -30,7 +30,7 @@ export default class Http {
       {
         domain: this.servers[service],
         key: this.key,
-        tokens: this.tokens,
+        queryParams: this.queryParams,
         errorHandle: this.errorHandle,
       },
       this.handlers
