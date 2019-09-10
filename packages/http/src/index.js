@@ -4,7 +4,7 @@ import {
   fetchRequest,
   responseStatusHandle,
   responseContentHandle,
-} from './middleware';
+} from './middlewares';
 import compose, { requestMethods } from './utils';
 import Instance from './instance';
 
