@@ -1,20 +1,19 @@
 import { defaultErrorHandler } from './utils';
 
 export default class Instance {
-  constructor(configs, handlers) {
-    Object.assign(this, configs);
+  constructor({ handlers, errorHandle, ...configs }) {
+    this.configs = configs;
+    this.errorHandle = errorHandle;
     this.handlers = handlers;
     this.fetch = this.fetch.bind(this);
     this.onError = this.onError.bind(this);
   }
 
   fetch(url, params, options) {
-    this.url = url;
-    this.options = options;
-    this.params = params;
-    this.data = {};
-    return this.handlers(this)
-      .then(() => this.data)
+    const configs = this.configs;
+    const ctx = Object.assign({}, configs, { url, options, params });
+    return this.handlers(ctx)
+      .then(() => ctx.data)
       .catch(this.onError);
   }
 
@@ -24,6 +23,6 @@ export default class Instance {
     } else {
       defaultErrorHandler(error);
     }
-    return {};
+    return Promise.reject({});
   }
 }

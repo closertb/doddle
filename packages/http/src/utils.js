@@ -36,11 +36,11 @@ export default function compose(middlewares = []) {
 
 // 常用post提交type及对应的dataFormat
 const enums = {
-  default: {
+  form: {
     type: 'application/x-www-form-urlencoded',
     format: data => qs.stringify(data),
   },
-  form: {
+  formData: {
     type: 'multipart/form-data',
     format: data =>
       Object.keys(data).reduce((prev, key) => {
@@ -54,7 +54,7 @@ const enums = {
   },
 };
 
-function genHeader(posttype = 'default', data) {
+function genHeader(posttype = 'form', data) {
   const { type, format } = enums[posttype];
   return {
     method: 'post',
@@ -86,8 +86,8 @@ export function defaultErrorHandler(error = {}) {
     return {};
   }
   // eslint-disable-next-line no-alert
+  console.log('errot');
   window.alert(error.message || '请求错误，请稍后重试');
-  return {};
 }
 
 export function sum(a, b) {

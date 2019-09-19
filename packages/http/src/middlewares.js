@@ -12,10 +12,15 @@ export function addRequestDomain(ctx, next) {
 
 export function addRequestQuery(ctx, next) {
   const {
-    queryParams = {},
+    query,
     options: { ignoreQuery = false },
   } = ctx;
-  ctx.url = ignoreQuery ? ctx.url : `${ctx.url}?${qs.stringify(queryParams)}`;
+  const queryParams = query && query();
+  // ignoreQuery 确认忽略，或者queryParams为空或压根不存在；
+  ctx.url =
+    ignoreQuery || !queryParams
+      ? ctx.url
+      : `${ctx.url}?${qs.stringify(queryParams)}`;
   return next();
 }
 
@@ -25,6 +30,7 @@ export async function fetchRequest(ctx, next) {
     ctx.response = await fetch(url, params);
     return next();
   } catch (error) {
+    console.log('error', error);
     return Promise.reject(error);
   }
 }
@@ -36,7 +42,7 @@ export async function responseStatusHandle(ctx, next) {
     ctx._response = ctx.data;
     return next();
   } else {
-    console.error('errorhandle');
+    return Promise.reject(response);
   }
 }
 

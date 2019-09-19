@@ -15,7 +15,7 @@ export default class Http {
     this.key = options.contentKey || '';
     this.before = options.beforeRequest || [];
     this.after = options.beforeResponse || [];
-    this.queryParams = (query && query()) || {};
+    this.query = query;
     this.errorHandle = errorHandle;
     this.create = this.create.bind(this);
     this.init();
@@ -26,15 +26,13 @@ export default class Http {
   }
 
   create(service) {
-    this.instance = new Instance(
-      {
-        domain: this.servers[service],
-        key: this.key,
-        queryParams: this.queryParams,
-        errorHandle: this.errorHandle,
-      },
-      this.handlers
-    );
+    this.instance = new Instance({
+      domain: this.servers[service],
+      key: this.key,
+      query: this.query,
+      errorHandle: this.errorHandle,
+      handlers: this.handlers,
+    });
     return requestMethods(this.instance.fetch);
   }
 
