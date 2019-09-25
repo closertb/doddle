@@ -1,6 +1,6 @@
 {
 	"name": "@doddle/http",
-	"version": "2.0.2",
+	"version": "2.0.4",
 	"scripts": {
 		"postpublish": "shx rm -rf lib",
 		"prepublish": "babel ./src --out-dir ./lib"
@@ -13,7 +13,8 @@
 	"author": "DenzelT",
 	"license": "ISC",
 	"dependencies": {
-		"qs": "^6.6.0"
+		"qs": "^6.6.0",
+		"js-cookie": "^2.2.1"
 	},
 	"main": "lib/index.js",
 	"devDependencies": {

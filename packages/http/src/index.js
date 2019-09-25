@@ -24,7 +24,6 @@ export default class Http {
   static create(options) {
     return new Http(options);
   }
-
   create(service) {
     this.instance = new Instance({
       domain: this.servers[service],
