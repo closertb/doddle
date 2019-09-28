@@ -411,7 +411,12 @@ export function responseContentHandle(ctx, next) {
 - query 为什么是在中间件中执行，而不是在 fetch 前执行，然后传参过来；
 
 本文的 demo 可在此[github 地址][5]下载，分支是 http；  
-执行用例可在此[github 地址][6]下载,分支是 dva；
+执行用例可在此[github 地址][6]下载,分支是 dva, 详细操作查看 Readme；
+如果你有兴趣在你的项目尝试，可查阅[npm 使用指南][7]
+
+```shell
+npm i @doddle/dva --save
+```
 
 [1]: https://chenshenhai.github.io/koajs-design-note/
 [2]: https://zhuanlan.zhihu.com/p/35040744
@@ -419,3 +424,4 @@ export function responseContentHandle(ctx, next) {
 [4]: https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Basic_concepts
 [5]: https://github.com/closertb/antd-doddle
 [6]: https://github.com/closertb/template
+[7]: https://www.npmjs.com/package/@doddle/http
