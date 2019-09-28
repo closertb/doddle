@@ -54,8 +54,8 @@ const enums = {
   },
 };
 
-function genHeader(posttype = 'form', data) {
-  const { type, format } = enums[posttype];
+function genHeader(contentType = 'form', data) {
+  const { type, format } = enums[contentType];
   return {
     method: 'post',
     mode: 'cors',
