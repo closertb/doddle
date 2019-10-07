@@ -41,6 +41,7 @@ module.exports = {
   appEjs: resolveApp('index.ejs'),
   output: `${appDirectory}/dist`,
   appBuild: resolveApp('dist'),
+  public: resolveApp('public'),
   appPackageJson: resolveApp('package.json'),
   appSrc: resolveApp('src'),
   proxySetup: resolveApp('src/setupProxy.js'),

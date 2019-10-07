@@ -1,6 +1,6 @@
 ## doddle-build
 
-一个 webpack 构建工具，类似于 react-scripts
+一个 webpack 构建工具，思路来自于 react-scripts
 
 ## 操作指南
 
@@ -35,9 +35,38 @@ scripts: {
 2. 关于 splitChunks 的使用，由于 http1.1 以后支持了多路复用，即一次可以多个请求同时发出。所以以前提出的构建打包成 css + js + css 三个文件的方案放在现在不是那么合适，我们可以将 css 与 js 拆成更多的包，4 个或者 6 个，特别是有 antd 这种大的 ui 项目时，可以把 react 全家桶打成一个包，将 antd 及其周边打成一个包， 详见 webpack.config.js；[参考文章][3]
 3. 热更新不生效，无法做到不刷新页面更新：当把 contentBase 修复成和 compile out（dist）一致时，样式能做到热更新；而 Js 仍然是哪个叼样；要解决这个，是个大工程（可参见 react-hot-loader）。[参考文章][4], [分析文章][5]
 
+## 可配置项
+
+通过在 package.json 中添加 webpack 属性，像这样：
+
+```js
+  "devDependencies": {
+    "@doddle/doddle-build": "^1.0.3",
+    "@doddle/eslint-config-doddle": "~0.0.13"
+  },
+  "webpack": {
+    "copyPublic": true
+  },
+```
+
+支持五种配置，如下所示：
+**config 参数**
+
+| 参数              | 说明                                             | 类型    | 默认值      |
+| ----------------- | ------------------------------------------------ | ------- | ----------- |
+| title             | 网站 title                                       | string  | doddle site |
+| useEslint         | 编译时是否开启 Eslint 检查                       | boolean | false       |
+| useAnalyse        | 是否开启打包图谱分析                             | boolean | false       |
+| useAntd           | 是否使用了 antd,使用了 antd 会单独打包           | boolean | false       |
+| copyPublic        | 是否复制 public 文件夹下的文件到打包到 dist 目录 | boolean | false       |
+| publicResolvePath | 打包到 dist 目录的路径, 默认 dist 根路径         | string  | './'        |
+| publicPath        | 静态资源路径                                     | string  | './'        |
+
 ## changeLog
 
 - 2019-09-01: 添加动态 title 配置支持，修复 css HMR
+
+- 2019-10-06: 添加 public 文件夹拷贝支持，完善 readme 支持
 
 [1]: https://webpack.js.org/guides/hot-module-replacement/
 [2]: https://stackoverflow.com/questions/52818569/webpack-dev-server-hot-reload-doesnt-work-via-node-api

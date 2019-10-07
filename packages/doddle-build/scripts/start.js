@@ -38,8 +38,12 @@ const args = process.argv.slice(ArgStart).reduce((pre, cur, index, arr) => {
 // We require that you explicitly set browsers and do not fall back to
 // browserslist defaults.
 // const { checkBrowsers } = require('react-dev-utils/browsersHelper');
-const title = require(paths.appPackageJson).title || 'doddle site';
-const config = configFactory('development', { title });
+const packageJson = require(paths.appPackageJson);
+const config = configFactory(
+  'development',
+  { title: packageJson.title },
+  packageJson.webpack
+);
 
 // const protocol = 'http';
 // const appName = require(paths.appPackageJson).name;

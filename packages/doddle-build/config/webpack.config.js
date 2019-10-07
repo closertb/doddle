@@ -5,6 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin'); // css 代码打包成文件注入html
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin; // 打包体积
+const copyWebpackPlugin = require('copy-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin'); // css 代码压缩
 
 const {
@@ -13,18 +14,7 @@ const {
 } = require('./limit');
 
 const { isSameObject } = require('./utils');
-/* // Resolve file paths in the same order as webpack
-const resolveModule = (resolveFn, filePath) => {
-  const extension = moduleFileExtensions.find(extension =>
-    fs.existsSync(resolveFn(`${filePath}.${extension}`))
-  );
 
-  if (extension) {
-    return resolveFn(`${filePath}.${extension}`);
-  }
-
-  return resolveFn(`${filePath}.js`);
-}; */
 function getSplitChunkConfig(useAntd) {
   return useAntd
     ? {
@@ -65,10 +55,15 @@ function build(webpackEnv = 'development', extConfig) {
   const NODE_ENV = process.env.NODE_ENV;
   const isServer = NODE_ENV === 'local';
   const isProduction = webpackEnv === 'production';
-  const openAnalyse = extConfig.useAnalyse || false;
-  const serverPath = extConfig.publicPath || './';
-  const useEslint = extConfig.useEslint || false;
-  const title = extConfig.title;
+  const {
+    title,
+    copyPublic,
+    publicResolvePath,
+    useAntd,
+    useEslint,
+    publicPath,
+    useAnalyse,
+  } = extConfig;
 
   const config = {
     entry: './src/index.js',
@@ -81,7 +76,7 @@ function build(webpackEnv = 'development', extConfig) {
         : '[name].bundle.[contenthash:8].js',
       // eslint-disable-next-line no-undef
       path: path.resolve(__dirname, paths.output),
-      publicPath: isProduction ? serverPath : './',
+      publicPath: isProduction ? publicPath : './',
     },
     module: {
       rules: [
@@ -108,7 +103,7 @@ function build(webpackEnv = 'development', extConfig) {
         minSize: 30000,
         chunks: 'all', // all, async, and initial, all means include all types of chunks
         name: false,
-        cacheGroups: getSplitChunkConfig(!isServer && extConfig.useAntd),
+        cacheGroups: getSplitChunkConfig(!isServer && useAntd),
       },
     },
     plugins: [
@@ -128,6 +123,15 @@ function build(webpackEnv = 'development', extConfig) {
       new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /zh-cn/),
     ],
   };
+  copyPublic &&
+    config.plugins.push(
+      new copyWebpackPlugin([
+        {
+          from: paths.public, //打包的静态资源目录地址
+          to: './', //打包到dist下面的public
+        },
+      ])
+    );
   if (isServer) {
     config.module.rules.push(
       {
@@ -232,7 +236,7 @@ function build(webpackEnv = 'development', extConfig) {
       new MiniCssExtractPlugin({ filename: 'index.[contenthash:8].css' }),
       new OptimizeCSSAssetsPlugin({})
     );
-    openAnalyse && config.plugins.push(new BundleAnalyzerPlugin());
+    useAnalyse && config.plugins.push(new BundleAnalyzerPlugin());
   }
   if (isProduction) {
     config.performance = {
@@ -244,10 +248,13 @@ function build(webpackEnv = 'development', extConfig) {
 }
 
 const initConfig = {
+  title: 'doddle site',
   useAnalyse: false, // 是否开启打包体积分析
   useAntd: false, // 是否开启antd打包优化
   useEslint: false, // 编译前检查代码格式
-  publicPath: './',
+  copyPublic: false, // 是否拷贝public文件夹内容
+  publicResolvePath: './', // public 文件拷贝目录，默认dist根目录
+  publicPath: './', // 文件绝对路径
 };
 
 const cache = {};
@@ -255,14 +262,15 @@ const cache = {};
 // 还未生效，还需要继续探索；
 module.exports = function createWithCache(
   webpackEnv = 'development',
-  extConfig = initConfig
+  extConfig = {}
 ) {
   const NODE_ENV = process.env.NODE_ENV;
-  if (cache[NODE_ENV] && isSameObject(cache[NODE_ENV].last, extConfig)) {
+  const withInitConfig = Object.assign({}, initConfig, extConfig);
+  if (cache[NODE_ENV] && isSameObject(cache[NODE_ENV].last, withInitConfig)) {
     return cache[NODE_ENV].config;
   }
   cache[NODE_ENV] = {};
-  cache[NODE_ENV].last = extConfig;
-  cache[NODE_ENV].config = build(webpackEnv, extConfig);
+  cache[NODE_ENV].last = withInitConfig;
+  cache[NODE_ENV].config = build(webpackEnv, withInitConfig);
   return cache[NODE_ENV].config;
 };

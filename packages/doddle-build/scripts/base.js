@@ -144,9 +144,13 @@ function build(nodeEnv, previousFileSizes) {
   const packageJson = fs.readJSONSync(paths.appPackageJson) || {};
   const config = configFactory(
     nodeEnv,
-    Object.assign({}, packageJson.webpack, {
-      title: packageJson.title || 'doddle site',
-    })
+    Object.assign(
+      {},
+      {
+        title: packageJson.title || 'doddle site',
+      },
+      packageJson.webpack
+    )
   );
   console.log('Creating an optimized production build...');
   // Remove all content but keep the directory so that
