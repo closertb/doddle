@@ -29,7 +29,7 @@ function downloadByGit(callback, branch) {
   console.log(
     green(`start download:, ${fileName} from ${gitUrl} of branch ${branchName}`)
   );
-  const result = spawn('git', ['clone', '-b', `${branch}`, gitUrl], {
+  const result = spawn('git', ['clone', '-b', `${branchName}`, gitUrl], {
     stdio: 'inherit',
   });
   const error = result.error;
