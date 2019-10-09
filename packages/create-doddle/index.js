@@ -15,7 +15,11 @@ const tempIndex = {
   vue: 'master', // vue 模板
   antd: 'antd', // 中后台项目模板
   h5: 'master', // h5模板
-  github: 'https://github.com/closertb/MyBlog.git', // github issue展示博客模板
+  github: {
+    name: 'closertb.github.io',
+    branch: 'blog',
+    git: 'https://github.com/closertb/closertb.github.io.git',
+  }, // github issue展示博客模板
   ssr: 'ssr', // ssr服务端渲染模板，还不成熟
 };
 

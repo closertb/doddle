@@ -24,7 +24,7 @@ async function rewriteJson() {
     json.description =
       fileTempName === 'template'
         ? `this project is based on template of branch ${branchName}`
-        : `this project is copy from ${branchName}`;
+        : `this project is copy from ${branchName.git}`;
     await fs.writeJson(path, json, { spaces: '\t' });
     console.log(green('format package.json success!'));
   } catch (err) {

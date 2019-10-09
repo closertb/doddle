@@ -22,7 +22,7 @@ function downloadByGit(callback, branch) {
   const isValidGitUrl = branch.startWith('http') && branch.endWith('.git');
   // 如果branch是一个有效的git下载地址；
   if (isValidGitUrl) {
-    branchName = 'master';
+    branchName = 'blog';
     fileName = branch.slice(branch.lastIndexOf('/')).replace('.git', '');
     gitUrl = branch;
   }
