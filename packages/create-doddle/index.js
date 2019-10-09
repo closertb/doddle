@@ -15,7 +15,7 @@ const tempIndex = {
   vue: 'master', // vue 模板
   antd: 'antd', // 中后台项目模板
   h5: 'master', // h5模板
-  github: 'github', // github issue展示博客模板
+  github: 'https://github.com/closertb/MyBlog.git', // github issue展示博客模板
   ssr: 'ssr', // ssr服务端渲染模板，还不成熟
 };
 
@@ -25,7 +25,6 @@ let inputIndex;
 const program = new commander.Command(packageJson.name)
   .version('v' + packageJson.version, '-v, --version')
   .option('-f, --force', 'force delete the exist director')
-  .option('-d, --directly', 'copy the not specified template')
   .arguments('<templateName>')
   .arguments('<projectName>')
   .alias('cp')
@@ -35,15 +34,12 @@ const program = new commander.Command(packageJson.name)
     // 允许目标项目名和要复制的模板类型名顺序颠倒
     if (tempIndex[index] || tempIndex[name]) {
       if (tempIndex[index]) {
-        templateName = tempIndex[index] || 'master';
+        templateName = tempIndex[index];
         projectName = name;
       } else {
-        templateName = tempIndex[name] || 'master';
+        templateName = tempIndex[name];
         projectName = index;
       }
-    }
-    if (program.directly) {
-      templateName = index;
     }
   });
 program.parse(process.argv);

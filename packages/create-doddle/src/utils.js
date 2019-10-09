@@ -16,18 +16,28 @@ function isWindows() {
 }
 
 function downloadByGit(callback, branch) {
-  console.log(green('start download:', `${branch} template`));
-  const result = spawn(
-    'git',
-    ['clone', '-b', `${branch}`, 'https://github.com/closertb/template.git'],
-    { stdio: 'inherit' }
+  let branchName = branch;
+  let fileName = template;
+  let gitUrl = 'https://github.com/closertb/template.git';
+  const isValidGitUrl = branch.startWith('http') && branch.endWith('.git');
+  // 如果branch是一个有效的git下载地址；
+  if (isValidGitUrl) {
+    branchName = 'master';
+    fileName = branch.slice(branch.lastIndexOf('/')).replace('.git', '');
+    gitUrl = branch;
+  }
+  console.log(
+    green(`start download:, ${fileName} from ${gitUrl} of branch ${branchName}`)
   );
+  const result = spawn('git', ['clone', '-b', `${branch}`, gitUrl], {
+    stdio: 'inherit',
+  });
   const error = result.error;
   if (error) {
     console.log(red(error));
     return;
   }
-  callback && callback();
+  callback && callback(fileName);
 }
 
 const currentPath = process.cwd().replace(/\\/g, '/') + '/';

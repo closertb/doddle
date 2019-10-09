@@ -8,6 +8,7 @@ const { currentPath, downloadByGit } = utils;
 let forceDel = false;
 let branchName;
 let projectName;
+let fileTempName;
 
 // 重写package.json
 async function rewriteJson() {
@@ -20,7 +21,10 @@ async function rewriteJson() {
     const json = await fs.readJson(path);
     json.name = projectName;
     json.title = `${projectName} site`;
-    json.description = `this project is based on template of branch ${branchName}`;
+    json.description =
+      fileTempName === 'template'
+        ? `this project is based on template of branch ${branchName}`
+        : `this project is copy from ${branchName}`;
     await fs.writeJson(path, json, { spaces: '\t' });
     console.log(green('format package.json success!'));
   } catch (err) {
@@ -42,8 +46,9 @@ async function unrelatedFileRemove(parentFile, callback) {
 }
 
 // 重命名gitClone下来的文件为项目文件名
-async function renameFile() {
-  const oldPath = currentPath + 'template';
+async function renameFile(fileName = 'template') {
+  fileTempName = fileName;
+  const oldPath = currentPath + fileName;
   const nowPath = currentPath + projectName;
   try {
     await fs.rename(oldPath, nowPath);
@@ -53,7 +58,8 @@ async function renameFile() {
   }
 }
 
-async function create(temp, project, force = false) {
+async function create(temp, project, force = false, otherUrl) {
+  // branchName 有可能是一个git下载地址
   branchName = temp;
   projectName = project;
   forceDel = force;
