@@ -17,14 +17,14 @@ function isWindows() {
 
 function downloadByGit(callback, branch) {
   let branchName = branch;
-  let fileName = template;
+  let fileName = 'template';
   let gitUrl = 'https://github.com/closertb/template.git';
-  const isValidGitUrl = branch.startWith('http') && branch.endWith('.git');
+  const isValidGitUrl = typeof branch === 'object';
   // 如果branch是一个有效的git下载地址；
   if (isValidGitUrl) {
-    branchName = 'blog';
-    fileName = branch.slice(branch.lastIndexOf('/')).replace('.git', '');
-    gitUrl = branch;
+    branchName = branch.branch;
+    fileName = branch.name;
+    gitUrl = branch.git;
   }
   console.log(
     green(`start download:, ${fileName} from ${gitUrl} of branch ${branchName}`)
