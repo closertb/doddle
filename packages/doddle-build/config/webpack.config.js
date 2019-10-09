@@ -78,6 +78,15 @@ function build(webpackEnv = 'development', extConfig) {
       path: path.resolve(__dirname, paths.output),
       publicPath: isProduction ? publicPath : './',
     },
+    resolve: {
+      alias: {
+        configs: paths.resolveApp('src/configs'),
+        components: paths.resolveApp('src/components'),
+        services: paths.resolveApp('src/services'),
+        pages: paths.resolveApp('src/pages'),
+        '@': paths.resolveApp('src'),
+      },
+    },
     module: {
       rules: [
         {

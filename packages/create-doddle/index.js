@@ -15,7 +15,8 @@ const tempIndex = {
   vue: 'master', // vue 模板
   antd: 'antd', // 中后台项目模板
   h5: 'master', // h5模板
-  dva: 'dva', // dva模板
+  github: 'github', // github issue展示博客模板
+  ssr: 'ssr', // ssr服务端渲染模板，还不成熟
 };
 
 let projectName;

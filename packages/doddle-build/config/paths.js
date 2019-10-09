@@ -37,6 +37,7 @@ const getPublicUrl = appPackageJson =>
 
 // config after eject: we're in ./config/
 module.exports = {
+  resolveApp,
   indexJs: resolveApp('src/index.js'),
   appEjs: resolveApp('index.ejs'),
   output: `${appDirectory}/dist`,
