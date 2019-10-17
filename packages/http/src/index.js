@@ -46,7 +46,7 @@ export default class Http {
   }
 
   // 中间件扩展， like Koa
-  use(fn, order) {
+  use(fn, order, isReplace = 0) {
     if (typeof fn !== 'function')
       throw new TypeError('middleware must be a function!');
     let _order = order || 0;
@@ -54,7 +54,7 @@ export default class Http {
     if (typeof _order !== 'number' || _order > this._middleWares.length) {
       _order = this._middleWares.length;
     }
-    this._middleware.spicle(order || this._middleWares.length, 0, fn);
+    this._middleWares.splice(order || this._middleWares.length, isReplace, fn);
     this._middlewareInit();
   }
   // 中间件初始化方法，内部调用
@@ -72,3 +72,11 @@ export default class Http {
     this._handlers = compose(this._middleWares);
   }
 }
+
+export const middleWares = {
+  addRequestDomain,
+  addRequestQuery,
+  fetchRequest,
+  responseStatusHandle,
+  responseContentHandle,
+};

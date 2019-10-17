@@ -77,19 +77,15 @@ export const requestMethods = fetch => ({
 });
 
 export function defaultErrorHandler(error = {}) {
+  const errorShow =
+    typeof window !== 'undefined' ? window.alert : console.error;
   if (
     error.message &&
     error.message.toUpperCase().includes('FAILED TO FETCH')
   ) {
     // eslint-disable-next-line no-alert
-    window.alert('网络错误，请检查后重试');
+    errorShow('网络错误，请检查后重试');
     return {};
   }
-  // eslint-disable-next-line no-alert
-  console.log('errot');
-  window.alert(error.message || '请求错误，请稍后重试');
-}
-
-export function sum(a, b) {
-  return a + b;
+  errorShow(error.message || '请求错误，请稍后重试');
 }
