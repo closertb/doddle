@@ -15,15 +15,10 @@ const WebpackDevServer = require('webpack-dev-server');
 const paths = require('../config/paths');
 const configFactory = require('../config/webpack.config');
 const { createCompiler } = require('./base');
-const ArgStart = 2;
+const { getArgs } = require('../config/utils');
 const isInteractive = process.stdout.isTTY;
 
-const args = process.argv.slice(ArgStart).reduce((pre, cur, index, arr) => {
-  if (~cur.indexOf('--')) {
-    pre[cur.replace(/-/g, '')] = arr[index + 1];
-  }
-  return pre;
-}, {});
+const args = getArgs();
 
 // We require that you explicitly set browsers and do not fall back to
 // browserslist defaults.

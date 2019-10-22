@@ -5,6 +5,7 @@ const address = require('address');
 const formatWebpackMessages = require('../config/formatWebpackMessages');
 const configFactory = require('../config/webpack.config');
 const clearConsole = require('../config/clearConsole');
+const { getArgs } = require('../config/utils');
 const paths = require('../config/paths');
 
 let isInteractive = process.stdout.isTTY;
@@ -141,11 +142,12 @@ function createCompiler(config, serverConfig) {
 
 // Create the production build and print the deployment instructions.
 function build(nodeEnv, previousFileSizes) {
+  const args = getArgs();
   const packageJson = fs.readJSONSync(paths.appPackageJson) || {};
   const config = configFactory(
     nodeEnv,
     Object.assign(
-      {},
+      args,
       {
         title: packageJson.title || 'doddle site',
       },
@@ -155,8 +157,9 @@ function build(nodeEnv, previousFileSizes) {
   console.log('Creating an optimized production build...');
   // Remove all content but keep the directory so that
   // if you're in it, you don't end up in Trash
-  fs.emptyDirSync(paths.output);
-  console.log(`step 1: clean dist content ${chalk.red('success')}`);
+  const outputPath = args.dist || 'dist';
+  fs.emptyDirSync(paths.setOutput(outputPath));
+  console.log(`step 1: clean ${outputPath} content ${chalk.red('success')}`);
   const compiler = createCompiler(config, false);
   return new Promise((resolve, reject) => {
     compiler.run((err, stats) => {

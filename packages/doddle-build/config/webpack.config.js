@@ -58,7 +58,9 @@ function build(webpackEnv = 'development', extConfig) {
   const {
     title,
     copyPublic,
-    publicResolvePath,
+    entry = 'index',
+    dist = 'dist',
+    template = 'ejs',
     useAntd,
     useEslint,
     publicPath,
@@ -66,7 +68,7 @@ function build(webpackEnv = 'development', extConfig) {
   } = extConfig;
 
   const config = {
-    entry: './src/index.js',
+    entry: `./src/${entry}.js`,
     devtool: isProduction ? false : 'cheap-source-map',
     mode: isProduction ? 'production' : 'development',
     output: {
@@ -75,7 +77,7 @@ function build(webpackEnv = 'development', extConfig) {
         ? '[name].bundle.js'
         : '[name].bundle.[contenthash:8].js',
       // eslint-disable-next-line no-undef
-      path: path.resolve(__dirname, paths.output),
+      path: paths.setOutput(dist),
       publicPath: isProduction ? publicPath : './',
     },
     resolve: {
@@ -116,10 +118,6 @@ function build(webpackEnv = 'development', extConfig) {
       },
     },
     plugins: [
-      new HtmlWebpackPlugin({
-        template: paths.appEjs,
-        title,
-      }),
       new webpack.DefinePlugin({
         'process.env': { NODE_ENV: "'" + NODE_ENV + "'" },
       }),
@@ -132,7 +130,17 @@ function build(webpackEnv = 'development', extConfig) {
       new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /zh-cn/),
     ],
   };
-  copyPublic &&
+  // 如果是ssr渲染，无需输出html文件
+  if (template === 'ejs') {
+    config.plugins.push(
+      new HtmlWebpackPlugin({
+        template: paths.appEjs,
+        title,
+      })
+    );
+  }
+  // 如果需要拷贝Public文件夹内容
+  if (copyPublic) {
     config.plugins.push(
       new copyWebpackPlugin([
         {
@@ -141,6 +149,7 @@ function build(webpackEnv = 'development', extConfig) {
         },
       ])
     );
+  }
   if (isServer) {
     config.module.rules.push(
       {

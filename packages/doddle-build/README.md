@@ -62,11 +62,30 @@ scripts: {
 | publicResolvePath | 打包到 dist 目录的路径, 默认 dist 根路径         | string  | './'        |
 | publicPath        | 静态资源路径                                     | string  | './'        |
 
+**cmd 参数**
+
+```sh
+doddle-build start --port 8906 // 指定端口
+
+// 以下三个参数，主要针对的是SSR打包的支持
+doddle-build dev --entry index --dist public --template none 指定了很多个变量
+```
+
+| 参数     | 说明                                                 | 类型    | 默认值 |
+| -------- | ---------------------------------------------------- | ------- | ------ |
+| port     | 端口，仅适用于 start                                 | string  | 3000   |
+| open     | 是否打开浏览器，仅适用于 start                       | boolean | false  |
+| entry    | 入口文件，不适用于 start                             | string  | index  |
+| dist     | 打包目标文件夹，不适用于 start                       | string  | dist   |
+| template | 是否输出 html 文件，为 none 时不输出，不适用于 start | string  | yes    |
+
 ## changeLog
 
 - 2019-09-01: 添加动态 title 配置支持，修复 css HMR
 
 - 2019-10-06: 添加 public 文件夹拷贝支持，完善 readme 支持
+
+- 2019-10-22: 添加对 ssr 模式打包的支持，即支持入口指定，编译输出文件夹指定等特性
 
 [1]: https://webpack.js.org/guides/hot-module-replacement/
 [2]: https://stackoverflow.com/questions/52818569/webpack-dev-server-hot-reload-doesnt-work-via-node-api

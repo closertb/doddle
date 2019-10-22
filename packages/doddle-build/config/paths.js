@@ -47,4 +47,5 @@ module.exports = {
   appSrc: resolveApp('src'),
   proxySetup: resolveApp('src/setupProxy.js'),
   publicUrl: getPublicUrl(resolveApp('package.json')),
+  setOutput: (dist = 'dist') => `${appDirectory}/${dist}`,
 };

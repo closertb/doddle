@@ -29,6 +29,13 @@ const scriptIndex = args.findIndex(
 /* // 寻找有效参数
 const protIndex = args.findIndex(x => ~x.indexOf('port')); */
 
+/**
+ * nodeArgs 支持的参数
+ * @params  port 端口        仅适用于npm start
+ * @params  entry 编译入口   不适用于start
+ * @params  dist  编译出口   不适用于start
+ */
+
 const script = scriptIndex === -1 ? args[0] : args[scriptIndex];
 const nodeArgs = scriptIndex > 0 ? args.slice(0, scriptIndex) : [];
 switch (script) {
