@@ -225,6 +225,8 @@ function build(webpackEnv = 'development', extConfig) {
             options: {
               // minimize: true,
               modules: true,
+              // context: path.resolve(__dirname, 'src'),
+              localIdentName: '[local]_[contenthash:base64:5]',
             },
           },
           'sass-loader',
@@ -238,6 +240,8 @@ function build(webpackEnv = 'development', extConfig) {
             loader: 'css-loader',
             options: {
               modules: true,
+              // context: path.resolve(__dirname, 'src'),
+              localIdentName: '[local]_[contenthash:base64:5]',
             },
           },
           {
