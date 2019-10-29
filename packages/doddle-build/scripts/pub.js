@@ -14,6 +14,8 @@ const chalk = require('chalk');
 const { build } = require('./base');
 const FileSizeReporter = require('../config/fileSizeReporter');
 const paths = require('../config/paths');
+const { getArgs } = require('../config/utils');
+
 const {
   WARN_AFTER_BUNDLE_GZIP_SIZE,
   WARN_AFTER_CHUNK_GZIP_SIZE,
@@ -31,7 +33,8 @@ const printFileSizesAfterBuild = FileSizeReporter.printFileSizesAfterBuild;
   proxyConfig,
   urls.lanUrlForConfig
 ); */
-measureFileSizesBeforeBuild(paths.appBuild)
+const args = getArgs();
+measureFileSizesBeforeBuild(paths.setOutput(args.dist))
   .then(previousFileSizes => {
     return build('production', previousFileSizes);
   })
@@ -57,7 +60,7 @@ measureFileSizesBeforeBuild(paths.appBuild)
     printFileSizesAfterBuild(
       stats,
       previousFileSizes,
-      paths.appBuild,
+      paths.setOutput(args.dist),
       WARN_AFTER_BUNDLE_GZIP_SIZE,
       WARN_AFTER_CHUNK_GZIP_SIZE
     );
