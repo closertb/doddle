@@ -41,8 +41,8 @@ const serverConfig = Object.assign(
     stats: {
       colors: true,
     },
-    contentBase: [paths.output],
-    watchContentBase: true,
+    // contentBase: [paths.setOutput(args.dist)],
+    // watchContentBase: true,
   },
   args,
   { open: args.open === 'true' }
