@@ -20,7 +20,9 @@ export function addRequestQuery(ctx, next) {
   ctx.url =
     ignoreQuery || !queryParams
       ? ctx.url
-      : `${ctx.url}?${qs.stringify(queryParams)}`;
+      : `${ctx.url}${ctx.url.includes('?') ? '&' : '?'}${qs.stringify(
+          queryParams
+        )}`;
   return next();
 }
 
