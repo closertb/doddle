@@ -14,7 +14,7 @@ module.exports = {
     // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-indent-props.md
     'react/jsx-indent-props': [1, 2],
 
-    //https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/prop-types.md
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/prop-types.md
     'react/prop-types': 0,
 
     // 允许jsx使用.js作为文件后缀

@@ -40,7 +40,7 @@ module.exports = {
     'no-return-assign': 0,
 
     // 允许使用局部require
-    //http://eslint.cn/docs/rules/global-require
+    // http://eslint.cn/docs/rules/global-require
     'global-require': 0,
 
     // 当最后一个元素或属性与闭括号 ] 或 } 在 不同的行时，允许（但不要求）使用拖尾逗号；当在 同一行时，禁止使用拖尾逗号
