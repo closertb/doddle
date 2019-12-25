@@ -56,19 +56,30 @@ const enums = {
 
 function genHeader(contentType = 'form', data) {
   const { type, format } = enums[contentType];
-  return {
-    method: 'post',
-    mode: 'cors',
-    headers: {
-      'Content-Type': type,
-    },
+  const body = {
+    method: 'POST',
+    headers: {},
     body: format(data),
   };
+  if (contentType !== 'formData') {
+    // fetch 的post Multipart设置，不能设置header的Content-type,否则会造成无Boundry
+    body.headers = {
+      'Content-Type': type,
+    };
+  }
+  return body;
 }
 
 export const requestMethods = fetch => ({
   get(url, params, options = {}) {
-    return fetch(`${url}?${qs.stringify(params)}`, params, options);
+    return fetch(
+      `${url}?${qs.stringify(params)}`,
+      {
+        method: 'GET',
+        headers: {},
+      },
+      options
+    );
   },
   post(url, params, options = {}) {
     const { type } = options;

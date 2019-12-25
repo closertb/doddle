@@ -11,6 +11,7 @@ import Instance from './instance';
 export default class Http {
   constructor(options) {
     const {
+      bodyParam = { mode: 'no-cors' }, // fetch通用设置
       query = () => ({}),
       servers = {},
       contentKey = '',
@@ -24,6 +25,7 @@ export default class Http {
     this.after = beforeResponse;
     this.query = query;
     this.errorHandle = errorHandle;
+    this.bodyParam = bodyParam;
     this.create = this.create.bind(this);
     this._middlewareInit();
   }
@@ -39,6 +41,7 @@ export default class Http {
       domain: this.servers[service],
       key: this.key,
       query: this.query,
+      bodyParam: this.bodyParam,
       errorHandle: this.errorHandle,
       handlers: this._handlers,
     });

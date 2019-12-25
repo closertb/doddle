@@ -2,7 +2,7 @@ module.exports = {
   testRegex: '.*\\.test\\.js$',
   testPathIgnorePatterns: ['/node_modules/'],
   moduleFileExtensions: ['js'],
-  collectCoverageFrom: ['/packages/http/src/*.js'],
+  collectCoverageFrom: ['/packages/http/src/*.test.js'],
   transform: {
     '^.+\\.js$': 'babel-jest',
   },
