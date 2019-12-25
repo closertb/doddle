@@ -54,16 +54,21 @@ const enums = {
   },
 };
 
-function genHeader(contentType = 'form', data) {
+function genHeader(contentType = 'form', data, headerOption) {
   const { type, format } = enums[contentType];
-  return {
+  const body = {
     method: 'post',
     mode: 'cors',
     headers: {
-      'Content-Type': type,
+      ...headerOption,
     },
     body: format(data),
   };
+  if (contentType !== 'formData') {
+    console.log('set');
+    body.headers['Content-Type'] = type;
+  }
+  return body;
 }
 
 export const requestMethods = fetch => ({
@@ -71,8 +76,8 @@ export const requestMethods = fetch => ({
     return fetch(`${url}?${qs.stringify(params)}`, params, options);
   },
   post(url, params, options = {}) {
-    const { type } = options;
-    return fetch(`${url}`, genHeader(type, params), options);
+    const { type, headerOption = {} } = options;
+    return fetch(`${url}`, genHeader(type, params, headerOption), options);
   },
 });
 
