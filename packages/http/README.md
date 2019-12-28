@@ -14,14 +14,14 @@ http.create('domain');
 
 **config 参数**
 
-| 参数           | 说明                          | 类型                | 默认值 |
-| -------------- | ----------------------------- | ------------------- | ------ |
-| servers        | 支持的服务域名对象            | object              | {}     |
-| query          | 统一查询字符串                | function            | --     |
-| contentKey     | 响应数据中业务数据对应的`key` | string              | ''     |
-| bodyParam      | fetch init 参数设置           | { mode: 'no-cors' } |        |
-| beforeRequest  | 请求发起前自定义中间件集合    | array               | []     |
-| beforeResponse | 请求响应前自定义中间件集合    | array               | []     |
+| 参数           | 说明                                           | 类型     | 默认值 |
+| -------------- | ---------------------------------------------- | -------- | ------ |
+| servers        | 支持的服务域名对象                             | object   | {}     |
+| query          | 统一查询字符串                                 | function | --     |
+| contentKey     | 响应数据中业务数据对应的`key`                  | string   | ''     |
+| bodyParam      | fetch init 参数设置(like: mode,credentials...) | object   | {}     |
+| beforeRequest  | 请求发起前自定义中间件集合                     | array    | []     |
+| beforeResponse | 请求响应前自定义中间件集合                     | array    | []     |
 
 ### 如何发送`ajax`请求
 
@@ -67,12 +67,12 @@ export function deleteUser(id) {
 
 **options 参数**
 
-| 参数        | 说明                                            | 类型    | 默认值         |
-| ----------- | ----------------------------------------------- | ------- | -------------- |
-| ignoreQuery | 是否忽略携带 query 参数                         | boolean | false          |
-| type        | contentType 参数设置, 支持 form, formData, json | string  | form           |
-| headers     | fetch init 参数的 headers 设置                  | {}      | 继承构造函数的 |
-| [others]    | fetch init 参数其他设置                         | --      | 继承构造函数的 |
+| 参数        | 说明                                               | 类型    | 默认值         |
+| ----------- | -------------------------------------------------- | ------- | -------------- |
+| ignoreQuery | 是否忽略携带 query 参数                            | boolean | false          |
+| type        | contentType 参数设置, 支持 form, formData, json    | string  | form           |
+| headers     | fetch init 参数的 headers 设置                     | {}      | 继承构造函数的 |
+| [others]    | fetch init 参数其他设置(like: mode,credentials...) | --      | 继承构造函数的 |
 
 ### HTTP 中间件
 

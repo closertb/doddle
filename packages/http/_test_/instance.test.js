@@ -100,9 +100,9 @@ export function postFormData(param) {
   );
 }
 
-test('mock a get request with mode of no-cors', async () => {
+test('mock a get request with no cors mode set', async () => {
   const data = await loginWith({ name: 'denzel' });
-  expect(data.params.mode).toEqual('no-cors');
+  expect(data.params.mode).toEqual(undefined);
 }, 100);
 
 test('mock a get request with right request url and ignore query params', async () => {

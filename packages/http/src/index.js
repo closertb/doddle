@@ -11,7 +11,7 @@ import Instance from './instance';
 export default class Http {
   constructor(options) {
     const {
-      bodyParam = { mode: 'no-cors' }, // fetch通用设置
+      bodyParam = {}, // fetch通用设置
       query = () => ({}),
       servers = {},
       contentKey = '',

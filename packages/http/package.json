@@ -1,6 +1,6 @@
 {
 	"name": "@doddle/http",
-	"version": "2.2.3",
+	"version": "2.2.4",
 	"scripts": {
 		"postpublish": "shx rm -rf lib",
 		"prepublish": "babel ./src --out-dir ./lib"
