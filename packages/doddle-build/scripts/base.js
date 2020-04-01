@@ -5,6 +5,7 @@ const address = require('address');
 const formatWebpackMessages = require('../config/formatWebpackMessages');
 const configFactory = require('../config/webpack.config');
 const clearConsole = require('../config/clearConsole');
+const mergeConfig = require('../config/mergeConfig');
 const { getArgs } = require('../config/utils');
 const paths = require('../config/paths');
 
@@ -144,16 +145,20 @@ function createCompiler(config, serverConfig) {
 function build(nodeEnv, previousFileSizes) {
   const args = getArgs();
   const packageJson = fs.readJSONSync(paths.appPackageJson) || {};
-  const config = configFactory(
-    nodeEnv,
-    Object.assign(
-      args,
-      {
-        title: packageJson.title || 'doddle site',
-      },
-      packageJson.webpack
+
+  let config = mergeConfig(
+    configFactory(
+      nodeEnv,
+      Object.assign(
+        args,
+        {
+          title: packageJson.title || 'doddle site',
+        },
+        packageJson.webpack
+      )
     )
   );
+
   console.log('Creating an optimized production build...');
   // Remove all content but keep the directory so that
   // if you're in it, you don't end up in Trash
