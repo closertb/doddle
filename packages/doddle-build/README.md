@@ -87,6 +87,8 @@ doddle-build dev --entry index --dist public --template none 指定了很多个�
 
 - 2019-10-22: 添加对 ssr 模式打包的支持，即支持入口指定，编译输出文件夹指定等特性
 
+- 2020-04-01: 添加对 webpack.config.js 自定义配置的支持，支持微前端 react 子项目打包; 增加 wepack useMicroMode 配置
+
 [1]: https://webpack.js.org/guides/hot-module-replacement/
 [2]: https://stackoverflow.com/questions/52818569/webpack-dev-server-hot-reload-doesnt-work-via-node-api
 [3]: https://medium.com/dailyjs/webpack-4-splitchunks-plugin-d9fbbe091fd0

@@ -52,6 +52,8 @@ switch (script) {
         .concat(args.slice(scriptIndex + 1)),
       { stdio: 'inherit' }
     );
+    // 写环境变量
+    process.env.DEPLOY_ENV = script;
     if (result.signal) {
       if (result.signal === 'SIGKILL') {
         console.log(

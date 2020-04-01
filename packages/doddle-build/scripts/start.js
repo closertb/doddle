@@ -1,7 +1,7 @@
 'use strict';
-
 // Do this as the first thing so that any code reading it knows the right env.
 process.env.NODE_ENV = 'local';
+process.env.DEPLOY_ENV = 'local';
 
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
@@ -14,20 +14,14 @@ const chalk = require('chalk');
 const WebpackDevServer = require('webpack-dev-server');
 const paths = require('../config/paths');
 const configFactory = require('../config/webpack.config');
+const mergeConfig = require('../config/mergeConfig');
 const { createCompiler } = require('./base');
 const { getArgs } = require('../config/utils');
 const isInteractive = process.stdout.isTTY;
 
 const args = getArgs();
 
-// We require that you explicitly set browsers and do not fall back to
-// browserslist defaults.
-// const { checkBrowsers } = require('react-dev-utils/browsersHelper');
 const packageJson = require(paths.appPackageJson);
-const config = configFactory(
-  'development',
-  Object.assign({}, { title: packageJson.title }, packageJson.webpack || {})
-);
 
 const serverConfig = Object.assign(
   {
@@ -41,6 +35,10 @@ const serverConfig = Object.assign(
     stats: {
       colors: true,
     },
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': '*',
+    },
     // contentBase: [paths.setOutput(args.dist)],
     // watchContentBase: true,
   },
@@ -51,11 +49,23 @@ const serverConfig = Object.assign(
 // Tools like Cloud9 rely on this.
 const HOST = serverConfig.host;
 const port = parseInt(serverConfig.port, 10);
-
 // this is a bug when use node Api to launch an WebpackDevServer, the hot update did not work
 // the problem mentioned at https://stackoverflow.com/questions/52818569/webpack-dev-server-hot-reload-doesnt-work-via-node-api
 // the document mentiod at https://webpack.js.org/guides/hot-module-replacement/
+const config = mergeConfig(
+  configFactory(
+    'development',
+    Object.assign(
+      {},
+      args,
+      { title: packageJson.title },
+      packageJson.webpack || {}
+    )
+  )
+);
+
 WebpackDevServer.addDevServerEntrypoints(config, serverConfig);
+
 const compiler = createCompiler(config, serverConfig);
 
 const devServer = new WebpackDevServer(compiler, serverConfig);

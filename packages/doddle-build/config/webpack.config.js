@@ -1,12 +1,13 @@
-const path = require('path');
 const webpack = require('webpack');
 const paths = require('./paths');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin'); // css 代码打包成文件注入html
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin; // 打包体积
+const ManifestPlugin = require('webpack-manifest-plugin');
 const copyWebpackPlugin = require('copy-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin'); // css 代码压缩
+const cssConfig = require('./cssConfig');
 
 const {
   WARN_AFTER_BUNDLE_GZIP_SIZE,
@@ -53,6 +54,7 @@ function getSplitChunkConfig(useAntd) {
 
 function build(webpackEnv = 'development', extConfig) {
   const NODE_ENV = process.env.NODE_ENV;
+  const DEPLOY_ENV = process.env.DEPLOY_ENV;
   const isServer = NODE_ENV === 'local';
   const isProduction = webpackEnv === 'production';
   const {
@@ -63,9 +65,15 @@ function build(webpackEnv = 'development', extConfig) {
     template = 'ejs',
     useAntd,
     useEslint,
-    publicPath,
+    publicPath = './',
     useAnalyse,
+    splitStyle = false,
+    useMicroMode = false,
+    disableSplitChunk = false,
   } = extConfig;
+
+  // 正式环境会默认启用css 文件分离
+  const isSplitStyle = useMicroMode || isProduction || splitStyle;
 
   const config = {
     entry: `./src/${entry}.js`,
@@ -78,7 +86,7 @@ function build(webpackEnv = 'development', extConfig) {
         : '[name].bundle.[contenthash:8].js',
       // eslint-disable-next-line no-undef
       path: paths.setOutput(dist),
-      publicPath: isProduction ? publicPath : './',
+      publicPath: publicPath,
     },
     resolve: {
       alias: {
@@ -86,6 +94,9 @@ function build(webpackEnv = 'development', extConfig) {
         components: paths.resolveApp('src/components'),
         services: paths.resolveApp('src/services'),
         pages: paths.resolveApp('src/pages'),
+        models: paths.resolveApp('src/models'),
+        services: paths.resolveApp('src/services'),
+        utils: paths.resolveApp('src/utils'),
         '@': paths.resolveApp('src'),
       },
     },
@@ -114,12 +125,17 @@ function build(webpackEnv = 'development', extConfig) {
         minSize: 30000,
         chunks: 'all', // all, async, and initial, all means include all types of chunks
         name: false,
-        cacheGroups: getSplitChunkConfig(!isServer && useAntd),
+        cacheGroups: disableSplitChunk
+          ? {}
+          : getSplitChunkConfig(!isServer && useAntd),
       },
     },
     plugins: [
       new webpack.DefinePlugin({
-        'process.env': { NODE_ENV: "'" + NODE_ENV + "'" },
+        'process.env': {
+          NODE_ENV: "'" + NODE_ENV + "'",
+          DEPLOY_ENV: "'" + DEPLOY_ENV + "'",
+        },
       }),
       // Moment.js is an extremely popular library that bundles large locale files
       // by default due to how Webpack interprets its code. This is a practical
@@ -151,52 +167,8 @@ function build(webpackEnv = 'development', extConfig) {
     );
   }
   if (isServer) {
-    config.module.rules.push(
-      {
-        // 对于纯css文件，由于面向的是第三方库，无需开启module
-        test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
-      },
-      {
-        test: /\.scss$/,
-        use: [
-          'style-loader',
-          {
-            loader: 'css-loader',
-            options: {
-              // minimize: true,
-              modules: true,
-              localIdentName: '[local]_[contenthash:base64:5]',
-            },
-          },
-          'sass-loader',
-        ],
-      },
-      {
-        test: /\.less$/,
-        use: [
-          'style-loader',
-          {
-            loader: 'css-loader',
-            options: {
-              // minimize: true,
-              modules: true,
-              context: path.resolve(__dirname, 'src'),
-              localIdentName: '[local]_[contenthash:base64:5]',
-            },
-          },
-          {
-            loader: 'less-loader',
-            options: {
-              // https://github.com/ant-design/ant-motion/issues/44
-              javascriptEnabled: true,
-            },
-          },
-        ],
-      }
-    );
     useEslint &&
-      config.rules.unshift({
+      config.module.rules.unshift({
         test: /\.jsx?$/,
         loader: 'eslint-loader',
         enforce: 'pre',
@@ -210,56 +182,26 @@ function build(webpackEnv = 'development', extConfig) {
     // 当开启了hot：true，会自动添加hotReplaceModule
     config.plugins.push(new webpack.NamedModulesPlugin());
   } else {
-    config.module.rules.push(
-      {
-        // 对于纯css文件，由于面向的是第三方库，无需开启module
-        test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader'],
-      },
-      {
-        test: /\.scss$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          {
-            loader: 'css-loader',
-            options: {
-              // minimize: true,
-              modules: true,
-              // context: path.resolve(__dirname, 'src'),
-              localIdentName: '[local]_[contenthash:base64:5]',
-            },
-          },
-          'sass-loader',
-        ],
-      },
-      {
-        test: /\.less$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          {
-            loader: 'css-loader',
-            options: {
-              modules: true,
-              // context: path.resolve(__dirname, 'src'),
-              localIdentName: '[local]_[contenthash:base64:5]',
-            },
-          },
-          {
-            loader: 'less-loader',
-            options: {
-              // https://github.com/ant-design/ant-motion/issues/44
-              javascriptEnabled: true,
-            },
-          },
-        ],
-      }
-    );
+    useAnalyse && config.plugins.push(new BundleAnalyzerPlugin());
+  }
+  // 添加样式处理loader
+  config.module.rules.push(...cssConfig(isSplitStyle));
+  if (isSplitStyle) {
     config.plugins.push(
       new MiniCssExtractPlugin({ filename: 'index.[contenthash:8].css' }),
       new OptimizeCSSAssetsPlugin({})
     );
-    useAnalyse && config.plugins.push(new BundleAnalyzerPlugin());
   }
+
+  useMicroMode &&
+    config.plugins.push(
+      new ManifestPlugin({
+        filter: ({ isAsset, path }) => {
+          // 只将js，css文件输入到Manifest.json
+          return !isAsset && /[\.js,\.css]+$/.test(path);
+        },
+      })
+    );
   if (isProduction) {
     config.performance = {
       maxAssetSize: WARN_AFTER_CHUNK_GZIP_SIZE,
