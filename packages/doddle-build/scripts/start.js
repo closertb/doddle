@@ -25,7 +25,7 @@ const packageJson = require(paths.appPackageJson);
 
 const serverConfig = Object.assign(
   {
-    host: 'localhost',
+    host: '0.0.0.0',
     port: '3000',
     hot: true,
     inline: true,
