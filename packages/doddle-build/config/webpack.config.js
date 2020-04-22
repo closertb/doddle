@@ -108,6 +108,12 @@ function build(webpackEnv = 'development', extConfig) {
           loader: 'babel-loader?cacheDirectory=true',
           query: {
             presets: ['@babel/preset-env', '@babel/preset-react'],
+            plugins: [
+              isServer && [
+                require.resolve('babel-plugin-dva-hmr'),
+                { disableModel: true },
+              ],
+            ],
           },
         },
         {
@@ -180,6 +186,7 @@ function build(webpackEnv = 'development', extConfig) {
         },
       });
     // 当开启了hot：true，会自动添加hotReplaceModule
+    config.plugins.push(new webpack.HotModuleReplacementPlugin());
     config.plugins.push(new webpack.NamedModulesPlugin());
   } else {
     useAnalyse && config.plugins.push(new BundleAnalyzerPlugin());
