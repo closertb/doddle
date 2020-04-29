@@ -108,12 +108,14 @@ function build(webpackEnv = 'development', extConfig) {
           loader: 'babel-loader?cacheDirectory=true',
           query: {
             presets: ['@babel/preset-env', '@babel/preset-react'],
-            plugins: [
-              isServer && [
-                require.resolve('babel-plugin-dva-hmr'),
-                { disableModel: true },
-              ],
-            ],
+            plugins: isServer
+              ? [
+                  [
+                    require.resolve('babel-plugin-dva-hmr'),
+                    { disableModel: true },
+                  ],
+                ]
+              : [],
           },
         },
         {
@@ -215,6 +217,7 @@ function build(webpackEnv = 'development', extConfig) {
       maxEntrypointSize: WARN_AFTER_BUNDLE_GZIP_SIZE,
     };
   }
+  console.log('change');
   return config;
 }
 
