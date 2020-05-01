@@ -1,7 +1,7 @@
 'use strict';
 
 // Do this as the first thing so that any code reading it knows the right env.
-process.env.NODE_ENV = 'dev';
+process.env.NODE_ENV = 'production';
 process.env.DEPLOY_ENV = 'dev';
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
@@ -23,7 +23,7 @@ const { build } = require('./base');
   urls.lanUrlForConfig
 ); */
 
-build('development')
+build('production')
   .then(({ warnings }) => {
     // console.log('va:', stats, previousFileSizes);
     if (warnings.length) {
