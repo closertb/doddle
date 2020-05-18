@@ -15,8 +15,10 @@ export default {
   onEffect(effect, sagaEffects, model, actionType) {
     return function*(action, effects = sagaEffects) {
       const { put } = effects;
+      // effectName 'user/getList'获取到的其实只是getList
       const effectName = removePrefixType(actionType);
       yield put({
+        // model 其实就只提供了nameSpace一个属性
         type: prefixType(UPDATE_LOADING_ACTION, model),
         payload: { effectName, value: true },
       });
