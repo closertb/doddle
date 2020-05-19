@@ -22,10 +22,6 @@ const isInteractive = process.stdout.isTTY;
 const args = getArgs();
 
 const packageJson = require(paths.appPackageJson);
-// 如果重写了public路径，则证明是存在跨域环境联调的
-if (args.public) {
-  args.disableHostCheck = true;
-}
 
 const serverConfig = Object.assign(
   {
