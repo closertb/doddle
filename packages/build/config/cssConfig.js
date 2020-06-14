@@ -34,8 +34,8 @@ module.exports = isSplit => {
           options: {
             // minimize: true,
             modules: true,
-            // 正式打包，这里是被注销了的
-            context: path.resolve(__dirname, 'src'),
+            // 不能加context, 否则会造成与css-modules-require-hook的hash计算不一致
+            // context: path.resolve(__dirname, 'src'),
             localIdentName: '[local]_[contenthash:base64:5]',
           },
         },
