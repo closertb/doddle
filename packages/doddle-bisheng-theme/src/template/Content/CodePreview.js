@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, Tooltip } from 'antd';
-import { ArrowsAltOutline, DownSquareOutline } from '@ant-design/icons';
+import { ArrowsAltOutlined, DownSquareOutlined } from '@ant-design/icons';
 
 const noop = () => {};
 
@@ -44,12 +44,12 @@ export default class CodePreview extends React.PureComponent {
         <div className="ctrl">
           <Tooltip placement="left" title="全屏查看">
             <span onClick={this.fullscreenPreview}>
-              <ArrowsAltOutline />
+              <ArrowsAltOutlined />
             </span>
           </Tooltip>
           <Tooltip placement="right" title="查看代码">
             <span onClick={this.handleCodeExpand}>
-              <DownSquareOutline />
+              <DownSquareOutlined />
             </span>
           </Tooltip>
         </div>
