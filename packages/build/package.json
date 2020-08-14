@@ -1,6 +1,6 @@
 {
   "name": "@doddle/doddle-build",
-  "version": "1.3.7",
+  "version": "1.3.8",
   "description": "a webpack compiler like react-scripts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -33,6 +33,8 @@
     "@babel/preset-env": "^7.2.0",
     "@babel/preset-react": "^7.0.0",
     "@babel/runtime": "^7.5.5",
+    "@babel/runtime-corejs2": "^7.11.2",
+    "@babel/runtime-corejs3": "^7.11.2",
     "address": "^1.1.0",
     "babel-loader": "^8.0.5",
     "babel-plugin-dva-hmr": "^0.4.2",
