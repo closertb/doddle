@@ -119,24 +119,13 @@ function build(webpackEnv = 'development', extConfig) {
           },
         },
         {
-          test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+          test: /\.(png|jpe?g|gif|ttf|svg)(\?.*)?$/,
           loader: 'url-loader',
           options: {
             limit: 10000, // 配置了10以下上限，那么当超过这个上线时，loader实际上时使用的file-loader；
           },
         },
       ],
-    },
-    // 公共js单独打包
-    optimization: {
-      splitChunks: {
-        minSize: 30000,
-        chunks: 'all', // all, async, and initial, all means include all types of chunks
-        name: false,
-        cacheGroups: disableSplitChunk
-          ? {}
-          : getSplitChunkConfig(!isServer && useAntd),
-      },
     },
     plugins: [
       new webpack.DefinePlugin({
@@ -154,6 +143,19 @@ function build(webpackEnv = 'development', extConfig) {
       new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /zh-cn/),
     ],
   };
+
+  if (!disableSplitChunk) {
+    // 公共js单独打包
+    config.optimization = {
+      splitChunks: {
+        minSize: 30000,
+        chunks: 'all', // all, async, and initial, all means include all types of chunks
+        name: false,
+        cacheGroups: getSplitChunkConfig(!isServer && useAntd),
+      },
+    };
+  }
+
   // 如果是ssr渲染，无需输出html文件
   if (template === 'ejs') {
     config.plugins.push(
