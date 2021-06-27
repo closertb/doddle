@@ -13,6 +13,7 @@ process.on('unhandledRejection', err => {
 const chalk = require('chalk');
 const WebpackDevServer = require('webpack-dev-server');
 const paths = require('../config/paths');
+const fs = require('fs');
 const configFactory = require('../config/webpack.config');
 const mergeConfig = require('../config/mergeConfig');
 const { createCompiler } = require('./base');
@@ -48,6 +49,11 @@ const serverConfig = Object.assign(
     disableHostCheck: args.disableHostCheck === 'true',
   }
 );
+
+if (fs.existsSync(paths.serverConfig)) {
+  // This registers user provided middleware for proxy reasons
+  Object.assign(serverConfig, require(paths.serverConfig)(serverConfig));
+}
 
 // Tools like Cloud9 rely on this.
 const HOST = serverConfig.host;

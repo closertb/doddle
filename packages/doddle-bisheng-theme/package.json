@@ -1,13 +1,15 @@
 {
 	"name": "@doddle/doddle-bisheng-theme",
-	"version": "1.0.1",
-	"main": "./lib/index.js",
+	"version": "1.0.3",
+	"main": "./es/index.js",
+	"module": "es/index.js",
 	"scripts": {
-		"postpublish": "shx rm -rf lib",
-		"prepublish": "babel ./src --out-dir ./lib && shx cp -R src/static/* lib/static"
+		"postpublish": "shx rm -rf es",
+		"prepublish": "babel ./src --out-dir ./es && shx cp -R src/static/* es/static"
 	},
 	"files": [
 		"lib",
+		"es",
 		"README.md"
 	],
 	"dependencies": {

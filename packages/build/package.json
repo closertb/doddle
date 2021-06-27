@@ -1,6 +1,10 @@
 {
   "name": "@doddle/doddle-build",
+<<<<<<< HEAD
   "version": "1.4.1",
+=======
+  "version": "1.4.0",
+>>>>>>> c7b7c62ed353f79cf63e172db2ced00d5454eb38
   "description": "a webpack compiler like react-scripts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
