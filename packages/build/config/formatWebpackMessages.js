@@ -16,7 +16,8 @@ function isLikelyASyntaxError(message) {
 }
 
 // Cleans up webpack error messages.
-function formatMessage(message) {
+function formatMessage({ message = '' }) {
+  // console.log('message', message);
   let lines = message.split('\n');
 
   // Strip Webpack-added headers off errors/warnings
@@ -110,10 +111,12 @@ function formatMessage(message) {
 }
 
 function formatWebpackMessages(json) {
-  const formattedErrors = json.errors.map(function(message) {
+  // console.log('json', json);
+  
+  const formattedErrors = (json.errors || []).map(function(message) {
     return formatMessage(message, true);
   });
-  const formattedWarnings = json.warnings.map(function(message) {
+  const formattedWarnings = (json.warnings || []).map(function(message) {
     return formatMessage(message, false);
   });
   const result = { errors: formattedErrors, warnings: formattedWarnings };

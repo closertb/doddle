@@ -26,29 +26,20 @@ function getSplitChunkConfig(useAntd) {
           chunks: 'all',
           priority: -10,
         },
-        vendors: {
+        vendor: {
           //cacheGroups重写继承配置，设为false不继承
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
-          minChunks: 1,
-          priority: -20,
+          test: /[\\/]node_modules[\\/](react|react-dom|react-router|react-router-dom|redux|react-redux|react-router-redux|redux-saga)[\\/]/,
+          name: 'react',
         },
-        index: {
-          minChunks: 1,
-          priority: -30,
-          name: 'index',
-          reuseExistingChunk: true,
-        },
-        default: false,
       }
     : {
-        vendors: {
+        vendor: {
           //cacheGroups重写继承配置，设为false不继承
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
-          minChunks: 1,
-          priority: -20,
+          test: /[\\/]node_modules[\\/](react|react-dom|react-router|react-router-dom|redux|react-redux|react-router-redux|redux-saga)[\\/]/,
+          name: 'react',
         },
+        defaultVendors: false,
+        default: false,
       };
 }
 
@@ -80,10 +71,10 @@ function build(webpackEnv = 'development', extConfig) {
     devtool: isProduction ? false : 'cheap-source-map',
     mode: isProduction ? 'production' : 'development',
     output: {
-      filename: isServer ? 'bundle.js' : 'bundle.[contenthash:8].js',
+      filename: isServer ? 'index.js' : 'index.[contenthash:8].js',
       chunkFilename: isServer
-        ? '[name].bundle.js'
-        : '[name].bundle.[contenthash:8].js',
+        ? '[id].bundle.js'
+        : '[id].bundle.[contenthash:8].js',
       // eslint-disable-next-line no-undef
       path: paths.setOutput(dist),
       publicPath: publicPath,
@@ -99,38 +90,35 @@ function build(webpackEnv = 'development', extConfig) {
         utils: paths.resolveApp('src/utils'),
         '@': paths.resolveApp('src'),
       },
+      fallback: { crypto: false }
     },
     module: {
       rules: [
         {
           test: /\.jsx?$/,
           exclude: /(node_modules|bower_components)/,
-          loader: 'babel-loader?cacheDirectory=true',
-          query: {
-            presets: ['@babel/preset-env', '@babel/preset-react'],
-            plugins: isServer
-              ? [
-                  [
-                    require.resolve('babel-plugin-dva-hmr'),
-                    { disableModel: true },
-                  ],
-                ]
-              : [],
+          use: {
+            loader: 'babel-loader',    
+            options: {
+              presets: ['@babel/preset-react'],
+              plugins: [
+                "@babel/plugin-transform-runtime",
+                "@babel/plugin-proposal-object-rest-spread",
+                ["@babel/plugin-proposal-decorators", { "legacy": true }],
+                ["@babel/plugin-proposal-class-properties", { "loose": true }]
+              ]
+            }
           },
         },
         {
           test: /\.(png|jpe?g|gif|ttf|svg)(\?.*)?$/,
-          loader: 'url-loader',
-          options: {
-            limit: 10000, // 配置了10以下上限，那么当超过这个上线时，loader实际上时使用的file-loader；
-          },
+          type: 'asset/resource'
         },
       ],
     },
     plugins: [
       new webpack.DefinePlugin({
         'process.env': {
-          NODE_ENV: "'" + NODE_ENV + "'",
           DEPLOY_ENV: "'" + DEPLOY_ENV + "'",
         },
       }),
@@ -145,12 +133,12 @@ function build(webpackEnv = 'development', extConfig) {
   };
 
   if (!disableSplitChunk) {
-    // 公共js单独打包
+    // 公共js单独打包    
     config.optimization = {
       splitChunks: {
+        chunks: 'all',
         minSize: 30000,
-        chunks: 'all', // all, async, and initial, all means include all types of chunks
-        name: false,
+        filename: '[name].bundle.[contenthash:8].js',
         cacheGroups: getSplitChunkConfig(!isServer && useAntd),
       },
     };
@@ -191,7 +179,6 @@ function build(webpackEnv = 'development', extConfig) {
       });
     // 当开启了hot：true，会自动添加hotReplaceModule
     config.plugins.push(new webpack.HotModuleReplacementPlugin());
-    config.plugins.push(new webpack.NamedModulesPlugin());
   } else {
     useAnalyse && config.plugins.push(new BundleAnalyzerPlugin());
   }
@@ -219,7 +206,6 @@ function build(webpackEnv = 'development', extConfig) {
       maxEntrypointSize: WARN_AFTER_BUNDLE_GZIP_SIZE,
     };
   }
-  console.log('change');
   return config;
 }
 
