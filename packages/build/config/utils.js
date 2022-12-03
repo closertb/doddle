@@ -16,7 +16,7 @@ function getArgs() {
     return pre;
   }, {});
 }
-// console.log('res:', isSameObject(initConfig, initConfig));
+
 module.exports = {
   isSameObject,
   getArgs,
