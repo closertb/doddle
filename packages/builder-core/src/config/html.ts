@@ -43,7 +43,7 @@ export default function ({
   };
   
   // 多页面, 微应用子应用不存在多入口html
-  if (!isMicroApp && pages && pages.length) {
+  if (pages && pages.length) {
     pages.forEach(({ title: pageTitle, name: pageName, module: moduePath, heads: _heads, bodies: _bodies }) => {
       const name = pageName || moduePath;
       webpackConfig

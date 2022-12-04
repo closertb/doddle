@@ -7,8 +7,8 @@ import { EnvsParams, } from '../const/interface';
 
 const miniCssExtractLoader = MiniCssExtractPlugin.loader;
 
-const lessModuleRegex = /\.module\.less$/;
-const cssModuleRegex = /\.module\.css$/;
+const lessModuleDefaultRegex = /\.module\.less$/;
+const cssModuleDefaultRegex = /\.module\.css$/;
 
 interface Opts {
   mfsu?: boolean;
@@ -29,7 +29,8 @@ interface Opts {
 interface CreateCSSRuleOpts extends Opts {
   lang: string;
   test: RegExp;
-  excludeRex?: RegExp;
+  excludeRegx?: RegExp | string;
+  includeRegx?: RegExp | string;
   loaderName: string;
   loader?: any;
   options?: any;
@@ -44,7 +45,8 @@ export function createCSSRule({
   loader,
   options,
   cssOptions = {},
-  excludeRex,
+  excludeRegx,
+  includeRegx,
   disableInline,
   browserslist,
 }: CreateCSSRuleOpts) {
@@ -52,12 +54,17 @@ export function createCSSRule({
     .rule(lang)
     .test(test);
 
-  if (excludeRex) {
+  if (excludeRegx) {
     rule.exclude
-    .add(excludeRex)
+    .add(excludeRegx)
     .end();
   }
 
+  if (includeRegx) {
+    rule.include
+    .add(includeRegx)
+    .end();
+  }
   
 
   // 开发环境，采用样式标签直接插入
@@ -126,7 +133,13 @@ export default function ({
 }: Opts) {
   const { ROOT_PATH } = envs;
 
-  const { isMicroApp = false, cssOptions: cssOptionsConfig  = {}, themes } = config;
+  const {
+    isMicroApp = false,
+    cssModuleRegx = cssModuleDefaultRegex,
+    lessModuleRegex = lessModuleDefaultRegex,
+    cssOptions: cssOptionsConfig  = {},
+    themes
+  } = config;
   const enableCssModules = !!config.cssmodules;
   const disableInline = config.enableInlineStyle ? false : !isDev || isMicroApp || config.disableInline;
 
@@ -154,7 +167,7 @@ export default function ({
     lang: 'css',
     loaderName: 'css-loader',
     test: /\.css$/,
-    excludeRex: enableCssModules ? cssModuleRegex,
+    excludeRegx: cssModuleRegx,
     disableInline,
     browserslist,
     cssOptions,
@@ -166,7 +179,8 @@ export default function ({
       config,
       lang: 'cssModule',
       loaderName: 'css-loader',
-      test: cssModuleRegex,
+      test: /\.css$/,
+      includeRegx: cssModuleRegx,
       disableInline,
       browserslist,
       cssOptions: Object.assign(cssMoudleDefaultOptions, cssOptions),
@@ -179,7 +193,7 @@ export default function ({
     config,
     lang: 'less',
     test: /\.less$/,
-    excludeRex: lessModuleRegex,
+    excludeRegx: lessModuleRegex,
     loaderName: 'less-loader',
     loader: require.resolve('less-loader'),
     disableInline,
@@ -193,7 +207,8 @@ export default function ({
       webpackConfig,
       config,
       lang: 'lessMoudle',
-      test: lessModuleRegex,
+      test: /\.less$/,
+      includeRegx: lessModuleRegex,
       loaderName: 'less-loader',
       loader: require.resolve('less-loader'),
       disableInline,

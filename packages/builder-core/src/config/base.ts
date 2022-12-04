@@ -119,8 +119,6 @@ export default function ({
   webpackConfig.resolve.modules
     .add('node_modules')
     .add(path.join(envs.ROOT_PATH, "node_modules"))
-    // 适配tnpm symlink 的奇葩模式
-    .add(path.join(BUILDER_ROOT_PATH, "../../"))
     // 适配正常npm nodemodules目录 和 当前模块依赖的特殊版本依赖
     .add(path.join(BUILDER_ROOT_PATH, "node_modules"));
 

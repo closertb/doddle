@@ -170,13 +170,14 @@ export class Bundler {
 
 	// 创建编译器
 	createCompiler(configList) {
-		if (!Array.isArray(configList) || !configList.length) {
-			throw new Error('入参要求是一个数组');
+		let _configs = configList;
+		if (!Array.isArray(configList)) {
+			_configs = [configList];
 		}
 		let compiler;
 		this.timeRecord.setStart();
 		try {		
-			compiler = Webpack(configList);
+			compiler = Webpack(_configs);
 		} catch (err) {
 			console.error(err);
 			console.log();
