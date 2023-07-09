@@ -1,6 +1,6 @@
 {
   "name": "@doddle/builder-core",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "base webpack config and compiler",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -39,6 +39,7 @@
     "@svgr/webpack": "^6.2.1",
     "babel-loader": "^8.2.5",
     "browserify-zlib": "^0.2.0",
+    "buffer": "^6.0.3",
     "chokidar": "^3.5.3",
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^9.0.0",
@@ -57,6 +58,7 @@
     "postcss": "^8.4.16",
     "postcss-loader": "^4.3.0",
     "postcss-preset-env": "^7.7.2",
+    "postcss-px-to-viewport": "^1.1.1",
     "process": "^0.11.10",
     "progress-bar-webpack-plugin": "^2.1.0",
     "react-refresh": "^0.14.0",

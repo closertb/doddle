@@ -8,7 +8,6 @@ import { genProcessEnvs } from '../const/utils';
 import { EnvsParams } from '../const/interface';
 import path from 'path';
 
-
 // DefinePlugin
 export default function ({
   webpackConfig,
@@ -50,6 +49,7 @@ export default function ({
     .plugin('provide')
     .use(ProvidePlugin, [{
       process: require.resolve('process/browser'),
+      Buffer: ['buffer', 'Buffer'],
     }]);
 
   // 自定义环境变量输出
@@ -75,10 +75,4 @@ export default function ({
         }],
       }]);
   });
-
-  // webpackConfig
-  // .plugin('hard-source')
-  // .use(
-  //   HardSourceWebpackPlugin,
-  //   [])
 }

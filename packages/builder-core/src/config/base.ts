@@ -18,7 +18,7 @@ export default function ({
   // 全局日志打印配置
   webpackConfig.stats('errors-warnings');
   // 入口设置
-  const { pages, symlinks = true, devtool, cache, useHash = false } = config;
+  const { pages, outputPath, symlinks = true, devtool, cache, useHash = false } = config;
 
   // 如果没有特殊的cache 配置，那就使用默认的系统缓存
   webpackConfig.cache(cache=== undefined ? {
@@ -61,7 +61,7 @@ export default function ({
   // outPut 设置
   webpackConfig
     .output
-    .path(BUILD_PATH)
+    .path(outputPath ? `${BUILD_PATH}${outputPath}` : BUILD_PATH)
     .pathinfo(false)
     .filename(useHash ? '[name].[contenthash:8].js' : '[name].js')
     // dev模式，在server中会对这个设置做一次修正
@@ -88,16 +88,16 @@ export default function ({
   webpackConfig.resolve
     .fallback
     .set('process', require.resolve('process/browser'))
-    .set('buffer', require.resolve('buffer'))
+    .set('buffer', require.resolve('buffer/'))
     .set('crypto', require.resolve('crypto-browserify'))
     .set('stream', require.resolve('stream-browserify'))
-    .set('zlib', require.resolve('browserify-zlib'))
+    // .set('zlib', require.resolve('browserify-zlib'))
     .set("events", require.resolve('events'))
-    .set("os", require.resolve('os-browserify/browser'))
-    // wap 编译有这个依赖
-    .set('path', require.resolve('path-browserify'))
-    // 新增vm, 主应用接灰度引擎会用
-    .set('vm', require.resolve('vm-browserify'));
+    // .set("os", require.resolve('os-browserify/browser'))
+    // // wap 编译有这个依赖
+    // .set('path', require.resolve('path-browserify'))
+    // // 新增vm, 主应用接灰度引擎会用
+    // .set('vm', require.resolve('vm-browserify'));
 
   webpackConfig.resolve.extensions
     .add('.tsx')
@@ -114,7 +114,8 @@ export default function ({
     .set('@/models', path.join(SRC_PATH, '/models'))
     .set('@/constants', path.join(SRC_PATH, '/constants'))
     .set('@/components', path.join(SRC_PATH, '/components'))
-    .set('@/services', path.join(SRC_PATH, '/services'));
+    .set('@/services', path.join(SRC_PATH, '/services'))
+    .set('@/configs', path.join(SRC_PATH, '/configs'));
   
   webpackConfig.resolve.modules
     .add('node_modules')

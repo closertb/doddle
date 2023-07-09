@@ -1,9 +1,9 @@
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'; // css 代码打包成文件注入html
 // import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin'; // css 代码压缩
 import Config from '@gem-mine/webpack-chain';
+import PxToViewPlugin from 'postcss-px-to-viewport';
 import path from 'path';
 import { EnvsParams, } from '../const/interface';
-
 
 const miniCssExtractLoader = MiniCssExtractPlugin.loader;
 
@@ -138,11 +138,19 @@ export default function ({
     cssModuleRegx = cssModuleDefaultRegex,
     lessModuleRegex = lessModuleDefaultRegex,
     cssOptions: cssOptionsConfig  = {},
-    themes
+    themes,
+    usePxToVm,
   } = config;
   const enableCssModules = !!config.cssmodules;
   const disableInline = config.enableInlineStyle ? false : !isDev || isMicroApp || config.disableInline;
 
+  if (usePxToVm) {
+    config.extraPostCSSPlugins = config.extraPostCSSPlugins || [];
+    config.extraPostCSSPlugins.push(PxToViewPlugin({
+      viewportWidth: 750,
+      exclude: [/node_modules/],
+    }));
+  }
   // 增加 importLoaders 默认配置；
   const cssOptions = Object.assign({ importLoaders: 1, }, cssOptionsConfig);
   const cssMoudleDefaultOptions = {

@@ -2,12 +2,10 @@ import WebpackDevServer from 'webpack-dev-server';
 import openPage from 'open';
 import * as qs from 'qs';
 
-export const getStartParam = async (finalConfig: any, projectHost: string = 'localhost') => {
-  const serverConfig = finalConfig.devServer;
-
-  const { port, https, path, query } = serverConfig || {};
+export const getStartParam = async (serverConfig) => {
+  const { port, https, host = 'localhost', path, query } = serverConfig || {};
   const querystring = query ? qs.stringify(query) : '';
-  const entryUrl = `//${projectHost || 'localhost'}:${port}`;
+  const entryUrl = `//${host}:${port}`;
 
   // 设置通用的url；
   let url = `http${https ? 's' : ''}:${entryUrl}`;
@@ -27,13 +25,12 @@ export const getStartParam = async (finalConfig: any, projectHost: string = 'loc
   };
 };
 
-export function startServer(config: any, compiler, projectHost) {
+export function startServer(compiler, serverConfig) {
   let startParam: any;
-  const serverConfig = config.devServer || {};
   // 默认打开
   const { open = true } = serverConfig;
   const _start = async () => {
-    startParam = await getStartParam(config, projectHost);
+    startParam = await getStartParam(serverConfig);
     
     // const compiler = webpack(config);
     // 删除webpack5 不兼容的键；

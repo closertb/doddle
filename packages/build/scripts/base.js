@@ -13,20 +13,38 @@ async function createCompiler(envs = {}) {
   const args = getArgs();
   const packageJson = fs.readJSONSync(paths.appPackageJson) || {};
   const appConfig = require(paths.appConfig);
-
-  console.log('Creating an optimized production build...', appConfig);
+  console.log('args:', args);
+  
+  // console.log('Creating an optimized production build...', appConfig);
 
   const outputPath = args.dist || 'dist';
   fs.emptyDirSync(paths.setOutput(outputPath));
 
-  console.log('envs:', Object.assign(paths.envs, envs));
+  // console.log('envs:', Object.assign(paths.envs, envs));
   
   const bundler = new WebpackBundler({
     envs: Object.assign(paths.envs, envs),
   });
 
-  // 自定义 config 实例化
-  await bundler.getConfig(appConfig);
+  const { webpack, ...others } = appConfig;
+
+  const appConfigs = Array.isArray(webpack) ? webpack : [webpack];
+
+  // 按多配置依次序列化
+  for (const config of appConfigs) {
+    // 指定了要编译的端;
+    if (args.runby) {
+      console.log('dg:', config.type, args.runby);
+      
+      // 只生成制定端的配置
+      if (config.type === args.runby) {
+        await bundler.getConfig(Object.assign(others, config));
+      }
+    } else {
+    // 实例化所有端配置
+    await bundler.getConfig(Object.assign(others, config));
+    }
+  }
 
   return bundler;
 }

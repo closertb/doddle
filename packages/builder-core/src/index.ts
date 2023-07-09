@@ -3,7 +3,7 @@ import Webpack from 'webpack';
 import chalk from 'chalk';
 import { genConfig } from './config';
 import { formatWebpackMessages } from './const/utils';
-import { EnvsParams, FastConfig, ModeEnum } from './const/interface';
+import { EnvsParams, ModeEnum } from './const/interface';
 import { startServer } from './server/start';
 interface Props {
 	envs: EnvsParams;
@@ -13,6 +13,7 @@ interface Props {
 export class Bundler {
 	props: Props;
 	configs: any;
+	configList: any[];
 	timeRecord = {
 		start: 0,
 		setStart() {
@@ -25,28 +26,21 @@ export class Bundler {
 
 	constructor(props: Props) {
 		this.props = props;
+		this.configList = [];
 	}
 
 	// 初始化通用配置
 	async init(configOpts: any = {}) {
 		const {
-			/* 这是一个内部流转标识，后面考虑换个位置 */
-			_typeIsMicroApp,
 			/* 下面的配置是构建器层的 */
 			chainConfig,
 			serverConfig = {},
 			/* 下面的配置是应用层的 */
-			page,
 			pages,
-			appType,
-			webpack = {},
+			devServer = {},
 			...others
 		} = configOpts;
 		
-		const { devServer = {} } = webpack as FastConfig['webpack'];
-
-		// 对devserver 做一个快合;
-		(webpack as FastConfig['webpack']).devServer = Object.assign(serverConfig, devServer);
 		const initConfig = {
 			// isLocal: true,
 			env: process.env.NODE_ENV as ModeEnum,
@@ -54,10 +48,8 @@ export class Bundler {
 			config: {
 				...others,
 				// 对老的微应用配置进行兼容
-				pages: pages || page,
-				appType,
-				isMicroApp: _typeIsMicroApp,
-				...webpack,
+				pages,
+				devServer: Object.assign(serverConfig, devServer),
 			},
 		};
 		
@@ -91,18 +83,17 @@ export class Bundler {
 
 		let finalConfig = chain.toConfig();
 
-		const projectDefineConfig = initConfig.config.config;
-		if (projectDefineConfig) {
-			finalConfig = await projectDefineConfig(finalConfig)
+		const appDefineConfig = initConfig.config.config;
+		if (appDefineConfig) {
+			finalConfig = await appDefineConfig(finalConfig)
 		}
 
-    this.configs = finalConfig;
+    this.configList.push(finalConfig);
   }
 
 	// 正式环境，开启构建;
-	// 正式环境，开启构建;
 	build() {
-		const compiler = this.createCompiler(this.configs);
+		const compiler = this.createCompiler(this.configList);
 		const runProcess = new Promise((resolve, reject) => {
 			compiler.run((err, stats) => {
 				let messages;
@@ -151,20 +142,17 @@ export class Bundler {
 		.catch(err => {
 			if (err && err.message) {
 				console.log(err.message);
-				console.log('----------可参考文档，对问题进行排查：');
-				console.log('https://yuque.antfin-inc.com/alsc-sfe/tz2aqe/eoem1y');
 			}
 			process.exit(1);
 		});
 	}
 
 	// 开发环境，开启构建并启动服务器;
-	async start(serverConfig?: any) {
-		const compiler = this.createCompiler(this.configs);
+	async start() {
+		const compiler = this.createCompiler(this.configList);
 		// 默认取第一个：
-		const _serverConfig = serverConfig || this.configs.devServer;
-		const projectHost = _serverConfig?.host || 'localhost';
-		const server = startServer(this.configs, compiler, projectHost);
+		const _serverConfig = this.configList[0].devServer;
+		const server = startServer(compiler, _serverConfig);
 		server.start();
 	}
 
