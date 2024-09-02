@@ -1,32 +1,28 @@
 {
-  "name": "@doddle/doddle-build",
-  "version": "3.0.0",
-  "description": "a webpack compiler like react-scripts",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "bin": {
-    "doddle-build": "./bin/doddle-build.js"
-  },
-  "keywords": [
-    "react-scripts",
-    "react",
-    "webpack"
-  ],
-  "author": "DenzelT",
-  "license": "ISC",
-  "files": [
-    "bin",
-    "config",
-    "scripts",
-    "index.js",
-    "README.md"
-  ],
-  "dependencies": {
-    "@doddle/builder-core": "^1.0.1",
-    "chalk": "^4.1.2",
-    "cross-spawn": "^7.0.3",
-    "fs-extra": "^10.1.0"
-  },
-  "gitHead": "c2d26a84e587d5906b8280f9fa74354bf2361783"
+	"name": "@doddle/doddle-build",
+	"version": "3.0.0",
+	"description": "a webpack compiler like react-scripts",
+	"bin": {
+		"doddle-build": "./bin/doddle-build.js"
+	},
+	"keywords": [
+		"react-scripts",
+		"react",
+		"webpack"
+	],
+	"author": "DenzelT",
+	"license": "ISC",
+	"files": [
+		"bin",
+		"config",
+		"scripts",
+		"index.js",
+		"README.md"
+	],
+	"dependencies": {
+		"chalk": "^4.1.2",
+		"cross-spawn": "^7.0.3",
+		"fs-extra": "^10.1.0"
+	},
+	"gitHead": "c2d26a84e587d5906b8280f9fa74354bf2361783"
 }

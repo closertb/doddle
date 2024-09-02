@@ -1,0 +1,33 @@
+{
+  "include": ["src/**/*.ts"],
+  "compilerOptions": {
+      "sourceMap": false,
+      "skipLibCheck": true,
+      "noImplicitAny": false, // 是否允许属性定义为any
+      "esModuleInterop": true,
+      "declaration": true,
+      "declarationDir": "es",
+      "allowSyntheticDefaultImports": true,
+      "moduleResolution": "node", // module === "AMD" or "System" or "ES6" ? "Classic" : "Node". Determine how modules get resolved
+      "module": "esnext",
+      "target": "es2016",
+      // "module": "commonjs",
+      "outDir": "es",
+      "jsx": "react",
+      "baseUrl": "./",
+      "paths": {
+        "*": ["node_modules/*"]
+      }
+  },
+  "linterOptions": {
+    "exclude": ["node_modules/**"]
+  },
+  "exclude": [
+    "node_modules/**",
+    "node_modules",
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "dist",
+    "es"
+  ]
+}

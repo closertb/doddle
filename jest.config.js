@@ -1,12 +1,15 @@
 module.exports = {
-  testRegex: '.*\\.test\\.js$',
-  testPathIgnorePatterns: ['/node_modules/'],
-  moduleFileExtensions: ['js'],
-  collectCoverageFrom: ['/packages/http/src/*.test.js'],
+  // testPathIgnorePatterns: ['/node_modules/'],
+  collectCoverageFrom: ['/packages/**/*.test.js'],
   transform: {
     '^.+\\.js$': 'babel-jest',
   },
-  /*   setupFiles: [
-    '<rootDir>/__test__/setup.js'
-  ], */
+  preset: 'ts-jest/presets/js-with-babel',
+  testEnvironment: "node",
+  // diagnostics: false,
+  // testRegex: '.*\\/__test__\\/.*\\.test\\.js$',
+  testRegex: '.*\\/__test__\\/visible\\.test\\.js$',
+  // testPathIgnorePatterns: ['/node_modules/'],
+  moduleFileExtensions: ['js', 'ts', 'json'],
+  transformIgnorePatterns: ["node_modules/?!(lodash-es)"]
 };
